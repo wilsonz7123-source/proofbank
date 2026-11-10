@@ -1,0 +1,1373 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f6f2">
+  <title>ProofBank — Your experience journal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #172a27;
+      --muted: #687a75;
+      --line: #dce5df;
+      --paper: #f5f6f2;
+      --white: #fff;
+      --green: #c9f36b;
+      --green-deep: #315b43;
+      --mint: #eaf4e9;
+      --blue: #dcecff;
+      --lilac: #eee7ff;
+      --shadow: 0 16px 48px rgba(26, 54, 43, .08);
+      --radius: 22px;
+      font-family: "Comfortaa", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: var(--paper); }
+    button, input, textarea, select { font: inherit; }
+    button { cursor: pointer; }
+    .topbar {
+      height: 72px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(18px, 5vw, 72px); border-bottom: 1px solid var(--line); background: rgba(255,255,255,.78);
+    }
+    .brand { display: flex; gap: 11px; align-items: center; font-weight: 780; letter-spacing: -.04em; font-size: 19px; }
+    .brand-mark { width: 34px; height: 34px; border-radius: 12px; background: var(--ink); color: var(--green); display: grid; place-items: center; font-size: 14px; letter-spacing: -.06em; }
+    .top-actions { display:flex; align-items:center; gap: 12px; }
+    .private-pill { color: var(--green-deep); background: var(--mint); border: 1px solid #d1e8d1; padding: 8px 11px; border-radius: 999px; font-size: 12px; font-weight: 650; }
+    .button { border: 0; border-radius: 12px; padding: 11px 15px; font-weight: 700; transition: transform .16s, box-shadow .16s, background .16s; }
+    .button:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(23,42,39,.12); }
+    .button-primary { background: var(--green); color: var(--ink); }
+    .button-dark { background: var(--ink); color: white; }
+    .button-light { background: #f0f4f0; color: var(--ink); border: 1px solid var(--line); }
+    .button-small { padding: 8px 11px; font-size: 13px; }
+    main { width: min(1240px, 92vw); margin: 0 auto; padding: 38px 0 64px; }
+    .hero { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom: 26px; }
+    .eyebrow { display:flex; align-items:center; gap:8px; text-transform:uppercase; letter-spacing:.13em; font-size:11px; color:var(--muted); font-weight:800; }
+    .spark { width:8px; height:8px; border-radius:50%; background:#77a858; box-shadow:0 0 0 4px #e3efd9; }
+    h1 { margin: 12px 0 8px; font-size:clamp(34px, 5vw, 56px); letter-spacing:-.065em; line-height:1.02; font-weight:760; }
+    .hero p { margin:0; color:var(--muted); line-height:1.55; max-width:640px; font-size:15px; }
+    .demo-label { align-self:flex-start; background:#fff; color:#596b65; border:1px solid var(--line); border-radius:12px; padding:10px 13px; font-size:12px; white-space:nowrap; box-shadow:0 3px 12px rgba(23,42,39,.04); }
+    .workspace { display:grid; grid-template-columns:minmax(0, 1.03fr) minmax(390px, .97fr); gap:18px; align-items:start; }
+    .panel { background:var(--white); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; }
+    .panel-head { padding:20px 22px 16px; border-bottom:1px solid #edf1ed; display:flex; justify-content:space-between; align-items:center; gap:14px; }
+    .step { display:flex; align-items:center; gap:10px; }
+    .step-num { width:28px; height:28px; border-radius:9px; display:grid; place-items:center; background:#eef4e8; color:#4d703f; font-size:12px; font-weight:800; }
+    .step h2 { font-size:16px; letter-spacing:-.025em; margin:0; }
+    .count-label { font-size:12px; color:var(--muted); }
+    .panel-body { padding:18px 22px 22px; }
+    .search-row { display:flex; gap:10px; margin-bottom:14px; }
+    .search { flex:1; min-width:0; border:1px solid var(--line); background:#fbfcfa; padding:10px 12px; border-radius:11px; outline:none; }
+    .search:focus, textarea:focus, input:focus, select:focus { border-color:#81ab68; box-shadow:0 0 0 3px rgba(129,171,104,.18); outline:none; }
+    .evidence-list { display:grid; gap:10px; }
+    .evidence-card { border:1px solid var(--line); border-radius:15px; padding:14px; display:grid; grid-template-columns:24px 1fr auto; gap:12px; align-items:start; transition:border .15s,background .15s,transform .15s; background:#fff; }
+    .evidence-card:hover { border-color:#b8cbb9; transform:translateY(-1px); }
+    .evidence-card.selected { border:1.5px solid #678e53; background:#f8fbf4; box-shadow:inset 0 0 0 1px rgba(103,142,83,.08); }
+    .check { width:20px; height:20px; border:1.5px solid #c8d5cb; border-radius:6px; margin-top:2px; display:grid; place-items:center; color:transparent; font-size:13px; font-weight:900; }
+    .selected .check { color:white; background:#60844d; border-color:#60844d; }
+    .card-title { font-size:14px; font-weight:750; letter-spacing:-.02em; margin:0 0 4px; }
+    .card-meta { display:flex; flex-wrap:wrap; gap:7px; color:var(--muted); font-size:11px; margin-bottom:9px; }
+    .card-summary { margin:0; color:#52645e; font-size:12px; line-height:1.47; }
+    .tag-row { display:flex; flex-wrap:wrap; gap:5px; margin-top:10px; }
+    .tag { font-size:10px; font-weight:700; padding:5px 7px; color:#49684d; background:#edf5e9; border-radius:999px; }
+    .tag.blue { color:#416480; background:#edf5fb; }
+    .tag.lilac { color:#69568e; background:#f2edfc; }
+    .sample-badge { align-self:start; border-radius:999px; padding:5px 7px; font-size:9px; text-transform:uppercase; letter-spacing:.08em; background:#f0f1ef; color:#73817a; font-weight:800; }
+    .empty-state { border:1px dashed #cbd7cf; border-radius:15px; padding:25px 16px; text-align:center; color:var(--muted); font-size:13px; }
+    .bank-footer { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:14px; }
+    .small-note { color:var(--muted); font-size:11px; line-height:1.4; }
+    .builder-panel { position:sticky; top:18px; }
+    .form-label { display:flex; justify-content:space-between; gap:12px; align-items:center; margin:16px 0 7px; font-weight:750; font-size:12px; }
+    .muted-label { color:var(--muted); font-weight:500; font-size:11px; }
+    select, input[type="number"], .prompt-input { width:100%; border:1px solid var(--line); border-radius:11px; padding:11px 12px; background:#fcfdfb; color:var(--ink); }
+    .prompt-input { min-height:76px; resize:vertical; line-height:1.45; }
+    .two-fields { display:grid; grid-template-columns:minmax(0,1fr) 110px; gap:10px; }
+    .skill-hint { color:var(--muted); font-size:11px; margin:8px 0 0; }
+    .draft-area { width:100%; min-height:190px; resize:vertical; border:1px solid var(--line); border-radius:13px; padding:13px 14px; line-height:1.58; color:#253a33; background:#fcfdfb; font-size:13px; }
+    .draft-area::placeholder { color:#95a29a; }
+    .draft-toolbar { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:9px; }
+    .char-count { font-variant-numeric:tabular-nums; color:var(--muted); font-size:11px; }
+    .char-count.near { color:#a76718; font-weight:700; }
+    .char-count.over { color:#b43d32; font-weight:800; }
+    .feedback { border-radius:12px; padding:11px 12px; margin-top:12px; background:#f2f7ee; color:#4d6d43; font-size:12px; line-height:1.45; display:flex; gap:9px; align-items:flex-start; }
+    .feedback.warn { background:#fff7e9; color:#875b1b; }
+    .feedback.error { background:#fff0ee; color:#9d4036; }
+    .proof-links { display:flex; flex-wrap:wrap; gap:6px; margin-top:11px; }
+    .proof-link { border:1px solid #d9e5d7; background:#f6faf3; color:#526f48; border-radius:8px; font-size:10px; padding:6px 8px; }
+    .proof-link:hover { border-color:#91b37f; background:#edf5e9; }
+    .bottom-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px; }
+    .info-card { background:rgba(255,255,255,.72); border:1px solid var(--line); border-radius:17px; padding:17px 19px; }
+    .info-card h3 { font-size:13px; margin:0 0 8px; }
+    .info-card p { color:var(--muted); font-size:12px; line-height:1.55; margin:0; }
+    .info-kicker { display:block; margin-top:12px; color:#526a57; font-size:10px; font-weight:750; text-transform:uppercase; letter-spacing:.08em; }
+    dialog { width:min(560px,92vw); border:1px solid var(--line); border-radius:20px; padding:0; box-shadow:0 30px 100px rgba(15,40,31,.25); }
+    dialog::backdrop { background:rgba(17,37,30,.42); backdrop-filter:blur(3px); }
+    .modal-head { display:flex; justify-content:space-between; align-items:center; padding:20px 22px 14px; border-bottom:1px solid #edf1ed; }
+    .modal-head h2 { margin:0; font-size:18px; letter-spacing:-.04em; }
+    .icon-button { width:34px; height:34px; border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--muted); font-size:18px; }
+    .modal-body { padding:16px 22px 22px; display:grid; gap:12px; max-height:70vh; overflow:auto; }
+    .modal-body label { font-size:12px; font-weight:750; display:block; }
+    .modal-body input, .modal-body textarea { margin-top:6px; }
+    .modal-body textarea { min-height:70px; width:100%; padding:10px 11px; border:1px solid var(--line); border-radius:10px; resize:vertical; }
+    .modal-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .form-help { font-size:10px; color:var(--muted); font-weight:500; }
+    .modal-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:4px; }
+    .toast { position:fixed; left:50%; bottom:24px; transform:translate(-50%,20px); background:var(--ink); color:#fff; padding:11px 15px; border-radius:999px; font-size:12px; box-shadow:var(--shadow); opacity:0; pointer-events:none; transition:all .2s; z-index:20; }
+    .toast.show { opacity:1; transform:translate(-50%,0); }
+    .footer { color:#87938d; font-size:10px; text-align:center; margin:18px 0 0; }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    @media (max-width: 900px) { .workspace { grid-template-columns:1fr; } .builder-panel { position:static; } }
+    @media (max-width: 620px) {
+      .topbar { height:62px; padding:0 16px; }
+      .private-pill { display:none; }
+      main { width:calc(100% - 28px); padding-top:25px; }
+      .hero { display:block; }
+      .demo-label { display:inline-block; margin-top:14px; }
+      .panel-head,.panel-body { padding-left:16px; padding-right:16px; }
+      .bottom-grid { grid-template-columns:1fr; }
+      .modal-row { grid-template-columns:1fr; }
+      .evidence-card { grid-template-columns:22px minmax(0,1fr); }
+      .sample-badge { grid-column:2; grid-row:1; justify-self:end; margin-top:0; }
+      .evidence-card .card-content { grid-column:2; grid-row:1; padding-right:72px; }
+    }
+
+    /* Field-notebook art direction: paper, ink, and margins instead of a dashboard skin. */
+    :root {
+      --ink:#2b2622; --muted:#756b5f; --line:#ded3c3; --paper:#f2ece1; --white:#fffdf8;
+      --green:#a84f37; --green-deep:#753e31; --mint:#f2e6db; --blue:#e4eceb; --lilac:#eee7df;
+      --shadow:0 3px 12px rgba(48,36,25,.055); --radius:4px;
+      font-family:"Comfortaa", sans-serif;
+    }
+    body { background:var(--paper); color:var(--ink); }
+    .topbar { height:68px; border-bottom:1px solid #d6c8b6; background:#f8f4ec; }
+    .brand { font:600 21px "Comfortaa", sans-serif; letter-spacing:-.035em; }
+    .brand-mark { background:#a84f37; color:#fff9f0; border-radius:2px; font:600 12px "Comfortaa",sans-serif; }
+    .private-pill { background:none; border:0; border-radius:0; padding:0; color:#716457; font:11px "Comfortaa",sans-serif; text-transform:uppercase; letter-spacing:.06em; }
+    .button { border-radius:3px; box-shadow:none; transition:background .15s,color .15s; }
+    .button:hover { transform:none; box-shadow:none; }
+    .button-primary { background:#a84f37; color:#fffaf3; }
+    .button-primary:hover { background:#873f2e; }
+    .button-dark { background:#2b2622; color:#fffdf8; }
+    .button-dark:hover { background:#453a32; }
+    .button-light { background:#faf6ef; color:#3a312b; border:1px solid #d8cbb9; }
+    .button-light:hover { background:#efe5d7; }
+    main { width:min(1220px,92vw); padding:42px 0 66px; }
+    .hero { align-items:flex-start; margin-bottom:23px; padding-bottom:25px; border-bottom:1px solid #d8cbb9; }
+    .eyebrow { color:#a84f37; font:700 11px "Comfortaa",sans-serif; letter-spacing:.12em; }
+    .spark { width:7px; height:7px; border-radius:0; background:#a84f37; box-shadow:none; transform:rotate(45deg); }
+    h1 { font:400 clamp(38px,5vw,58px)/1.03 "Comfortaa",sans-serif; letter-spacing:-.045em; margin:14px 0 11px; }
+    .hero p { color:#61564b; font-size:15px; line-height:1.7; max-width:620px; }
+    .demo-label { align-self:flex-start; margin-top:8px; background:transparent; color:#a84f37; border:1px solid #b87963; border-radius:0; padding:9px 10px; box-shadow:none; font:10px "Comfortaa",sans-serif; letter-spacing:.04em; transform:rotate(-1.5deg); }
+    .workspace { grid-template-columns:minmax(0,.98fr) minmax(390px,1.02fr); gap:22px; }
+    .panel { background:#fffdf8; border:1px solid #d7c9b7; border-radius:3px; box-shadow:0 3px 12px rgba(48,36,25,.045); }
+    .panel-head { padding:17px 20px 14px; background:#faf6ee; border-bottom:1px solid #ded3c3; }
+    .step { gap:8px; }
+    .step-num { display:block; width:auto; height:auto; border-radius:0; background:none; color:#a84f37; font:italic 14px "Comfortaa",sans-serif; }
+    .step h2 { font:500 19px "Comfortaa",sans-serif; letter-spacing:-.025em; }
+    .count-label { color:#796d60; font:11px "Comfortaa",sans-serif; white-space:nowrap; }
+    .panel-body { padding:17px 20px 21px; }
+    .search { border:1px solid #d8cbb9; background:#fffdf8; border-radius:3px; padding:10px 11px; }
+    .search:focus, textarea:focus, input:focus, select:focus { border-color:#a84f37; box-shadow:0 0 0 2px rgba(168,79,55,.13); outline:none; }
+    .evidence-list { gap:0; }
+    .empty-state { border:1px dashed #d0c1ae; border-radius:0; padding:16px; text-align:left; color:#756b5f; background:#faf6ee; font:12px/1.5 "Comfortaa",sans-serif; }
+    .evidence-card { border:0; border-bottom:1px solid #e6ddd0; border-radius:0; padding:14px 7px 14px 2px; gap:10px; background:transparent; transition:background .12s; }
+    .evidence-card:hover { border-color:#e0d3c1; transform:none; background:#fcf8f1; }
+    .evidence-card.selected { border:0; border-bottom:1px solid #dfc7b8; border-left:3px solid #a84f37; background:#f8efe7; box-shadow:none; padding-left:7px; }
+    .check { width:17px; height:17px; border:1px solid #b9aa98; border-radius:2px; font-size:11px; margin-top:3px; }
+    .selected .check { background:#a84f37; border-color:#a84f37; }
+    .card-title { font:500 17px "Comfortaa",sans-serif; letter-spacing:-.015em; margin:0; }
+    .entry-title-row { display:flex; align-items:flex-start; justify-content:space-between; gap:9px; margin-bottom:5px; }
+    .entry-actions { display:flex; align-items:center; gap:9px; flex-shrink:0; }
+    .sample-badge { padding:0; background:transparent; color:#a84f37; border-radius:0; font:9px "Comfortaa",sans-serif; letter-spacing:.04em; }
+    .delete-entry { border:0; padding:1px 0; color:#88796a; background:transparent; text-decoration:underline; text-decoration-color:#cab9a7; text-underline-offset:3px; font:10px "Comfortaa",sans-serif; }
+    .delete-entry:hover { color:#a33c2b; text-decoration-color:#a33c2b; }
+    .card-meta { color:#7b6e60; font:10px "Comfortaa",sans-serif; letter-spacing:.035em; text-transform:uppercase; gap:6px; margin:4px 0 8px; }
+    .card-summary { color:#51483f; font-size:12px; line-height:1.6; }
+    .tag-row { gap:9px; margin-top:8px; }
+    .tag,.tag.blue,.tag.lilac { padding:0 0 2px; color:#67584a; background:none; border-radius:0; border-bottom:1px solid #d9cbb9; font:10px "Comfortaa",sans-serif; }
+    .bank-footer { border-top:1px solid #e6ddd0; padding-top:12px; justify-content:flex-end; }
+    .small-note { color:#817568; font-size:10px; line-height:1.5; }
+    .builder-panel { position:static; }
+    .form-label { color:#554a40; font:700 10px "Comfortaa",sans-serif; letter-spacing:.07em; text-transform:uppercase; margin:15px 0 7px; }
+    .muted-label { color:#84786d; font:10px "Comfortaa",sans-serif; letter-spacing:0; text-transform:none; }
+    select,input[type="number"],.prompt-input { border:1px solid #d8cbb9; border-radius:3px; background:#fffdf8; padding:10px 11px; }
+    .two-fields { grid-template-columns:minmax(0,1fr) 116px; }
+    .skill-hint { color:#776b60; font-size:11px; line-height:1.55; }
+    .idea-notes,.resume-input { width:100%; min-height:122px; padding:11px 12px; border:1px solid #d8cbb9; border-radius:3px; resize:vertical; color:#39332e; background:#fffdf8; font-size:12px; line-height:1.55; }
+    .draft-area { min-height:260px; resize:vertical; border:1px solid #d8cbb9; border-radius:2px; padding:11px 12px 11px 38px; color:#39332e; background-color:#fffdf8; background-image:linear-gradient(to right,transparent 0,transparent 27px,rgba(168,79,55,.22) 28px,transparent 29px),repeating-linear-gradient(to bottom,transparent 0,transparent 27px,#e7ded1 28px,#e7ded1 29px); background-position:0 0,0 12px; background-attachment:local; line-height:29px; font:13px/29px "Comfortaa",sans-serif; }
+    .draft-toolbar { margin-top:8px; }
+    .char-count { color:#796d60; font:10px "Comfortaa",sans-serif; }
+    .char-count.near { color:#9d651b; }
+    .char-count.over { color:#a33c2b; }
+    .feedback { border-left:3px solid #a84f37; border-radius:0; padding:9px 11px; background:#f7efe5; color:#594a3f; font-size:11px; }
+    .feedback[hidden] { display:none !important; }
+    .feedback.warn { background:#fbf2e2; color:#805b28; }
+    .feedback.error { background:#f8e9e4; color:#943d31; }
+    .proof-links { margin-top:10px; }
+    .proof-link { border:1px solid #d6c7b5; background:#fbf7ef; color:#6f4638; border-radius:2px; font:10px "Comfortaa",sans-serif; padding:6px 8px; }
+    .proof-link:hover { border-color:#a84f37; background:#f6eae1; }
+    .bottom-grid { gap:26px; margin-top:29px; }
+    .info-card { background:transparent; border:0; border-top:1px solid #cfc1ae; border-radius:0; padding:15px 2px; }
+    .info-card h3 { font:500 17px "Comfortaa",sans-serif; }
+    .info-card p { color:#675c50; font-size:12px; }
+    .info-kicker { color:#a84f37; font:10px "Comfortaa",sans-serif; letter-spacing:.04em; text-transform:uppercase; }
+    .footer { color:#8a7d6f; font:10px "Comfortaa",sans-serif; }
+    .button:disabled { opacity:.45; cursor:not-allowed; }
+    .resume-section { margin-top:22px; padding-bottom:19px; }
+    .resume-intro { padding:12px 20px 0; color:#675c50; font:13px "Comfortaa",sans-serif; }
+    .resume-layout { display:grid; grid-template-columns:minmax(250px,.82fr) minmax(0,1.18fr); gap:23px; padding:8px 20px 14px; }
+    .resume-add { padding:12px; background:#faf6ee; border:1px solid #e1d6c7; }
+    .resume-add input[type="text"] { width:100%; border:1px solid #d8cbb9; border-radius:3px; padding:10px 11px; background:#fffdf8; }
+    .resume-input { min-height:125px; }
+    .resume-add-actions,.diff-actions { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-top:9px; }
+    .file-label { display:inline-flex; align-items:center; }
+    .resume-compare { min-width:0; }
+    .resume-selects { display:grid; grid-template-columns:1fr 1fr; gap:0 12px; }
+    .resume-selects .form-label { margin-top:12px; }
+    .resume-selects select { width:100%; }
+    .diff-heading { margin:13px 0 8px; color:#554a40; font:13px "Comfortaa",sans-serif; }
+    .diff-list { max-height:280px; overflow:auto; border:1px solid #ded3c3; background:#fffdf8; }
+    .diff-line { display:block; padding:6px 9px; border-bottom:1px solid #eee7dd; white-space:pre-wrap; overflow-wrap:anywhere; color:#51483f; font:11px/1.45 "Comfortaa",sans-serif; }
+    .diff-added { background:#eef3e8; color:#395536; }
+    .diff-removed { background:#f7e9e4; color:#8b4035; }
+    .diff-empty { padding:14px; color:#84786d; font-size:11px; }
+    .resume-shelf-head { display:flex; justify-content:space-between; align-items:center; margin:8px 20px 0; padding:12px 0 7px; border-top:1px solid #ded3c3; color:#51483f; font:15px "Comfortaa",sans-serif; }
+    .resume-shelf-head span { color:#817568; font:10px "Comfortaa",sans-serif; }
+    .resume-list { margin:0 20px; }
+    .resume-row { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:12px; align-items:center; padding:9px 0; border-top:1px solid #eee7dd; }
+    .resume-row-title { color:#3b332c; font:14px "Comfortaa",sans-serif; }
+    .resume-row-meta { color:#83776a; font:10px "Comfortaa",sans-serif; margin-top:3px; }
+    .resume-row-actions { display:flex; gap:9px; align-items:center; }
+    .resume-row-actions button { border:0; background:transparent; padding:2px 0; color:#755044; text-decoration:underline; text-underline-offset:3px; font:10px "Comfortaa",sans-serif; }
+    .resume-row-actions button:hover { color:#a33c2b; }
+    dialog { border:1px solid #d6c7b5; border-radius:3px; background:#fffdf8; box-shadow:0 16px 45px rgba(48,36,25,.22); }
+    dialog::backdrop { background:rgba(42,34,27,.42); backdrop-filter:blur(1px); }
+    .modal-head { border-color:#e4dacd; }
+    .modal-head h2 { font:500 20px "Comfortaa",sans-serif; letter-spacing:-.02em; }
+    .icon-button { border-radius:2px; background:#faf6ee; }
+    .modal-body label { color:#554a40; font:700 10px "Comfortaa",sans-serif; letter-spacing:.04em; text-transform:uppercase; }
+    .modal-body input,.modal-body textarea { width:100%; border:1px solid #d8cbb9; border-radius:3px; padding:10px 11px; background:#fffdf8; font:12px "Comfortaa",sans-serif; text-transform:none; letter-spacing:0; }
+    .modal-body textarea { line-height:1.5; }
+    .form-help { color:#84786d; }
+    .toast { border-radius:3px; background:#2b2622; font:11px "Comfortaa",sans-serif; box-shadow:0 4px 16px rgba(48,36,25,.18); }
+    @media (max-width:900px) { .workspace { grid-template-columns:1fr; } .resume-layout { grid-template-columns:1fr; } }
+    @media (max-width:620px) {
+      .topbar { height:62px; padding:0 16px; }
+      .private-pill { display:none; }
+      main { width:calc(100% - 28px); padding-top:25px; }
+      .hero { display:block; }
+      .demo-label { display:inline-block; margin-top:14px; }
+      .panel-head,.panel-body { padding-left:14px; padding-right:14px; }
+      .resume-intro { padding-left:14px; padding-right:14px; }
+      .resume-layout { padding-left:14px; padding-right:14px; }
+      .resume-shelf-head,.resume-list { margin-left:14px; margin-right:14px; }
+      .resume-selects { grid-template-columns:1fr; }
+      .resume-row { grid-template-columns:1fr; }
+      .resume-row-actions { justify-content:flex-start; }
+      .bottom-grid { grid-template-columns:1fr; }
+      .modal-row { grid-template-columns:1fr; }
+      .evidence-card { grid-template-columns:20px minmax(0,1fr); }
+      .evidence-card .card-content { grid-column:2; grid-row:1; padding-right:0; }
+      .entry-title-row { flex-wrap:wrap; }
+      .entry-actions { margin-left:auto; }
+    }
+    .notebook-spiral {
+      position:fixed; z-index:3; top:88px; bottom:16px;
+      left:max(8px,calc((100vw - 1220px)/2 - 24px)); width:16px;
+      pointer-events:none; opacity:.8;
+      background:
+        radial-gradient(circle at center, transparent 0 4px, #968674 4.5px 5.5px, transparent 6px)
+        0 0/16px 36px repeat-y;
+    }
+    .topbar { position:sticky; top:0; z-index:20; box-shadow:0 2px 9px rgba(48,36,25,.06); }
+    .hero { border-bottom:2px solid #cbbca8; }
+    .panel { border-radius:14px; }
+    .button { border-radius:8px; }
+    .button-small { border-radius:7px; }
+    .search,select,input[type="number"],.prompt-input,.resume-add input[type="text"] { border-radius:8px; }
+    .evidence-card { border:1px solid #e3d9cc; border-radius:10px; padding:13px 12px; background:#fffdf8; }
+    .evidence-card:hover { border:1px solid #cbb9a5; border-radius:10px; }
+    .evidence-card.selected { border:1px solid #dfc7b8; border-left:3px solid #a84f37; border-radius:10px; padding-left:10px; }
+    .idea-notes,.resume-input,.draft-area { border-radius:9px; }
+    .resume-add { border-radius:10px; }
+    .diff-list { border-radius:8px; }
+    .icon-button { border-radius:7px; }
+    @media (max-width:620px) { .notebook-spiral { display:none; } }
+    body.auth-open { overflow:hidden; }
+    .account-label { color:#756b5f; font:11px "Comfortaa",sans-serif; }
+    .sign-out-button { border:0; background:transparent; padding:6px 0; color:#755044; text-decoration:underline; text-underline-offset:3px; font:10px "Comfortaa",sans-serif; }
+    .auth-screen,.welcome-screen { position:fixed; inset:0; z-index:1000; display:grid; place-items:center; overflow:auto; padding:24px; background:var(--paper); }
+    .auth-screen[hidden],.welcome-screen[hidden] { display:none; }
+    .auth-card { width:min(460px,100%); padding:clamp(26px,6vw,44px); border:1px solid var(--line); border-radius:20px; background:var(--white); box-shadow:0 16px 48px rgba(48,36,25,.1); }
+    .auth-mark { width:48px; height:48px; display:grid; place-items:center; margin-bottom:26px; border-radius:15px; background:var(--green); color:#fff9f0; font:700 16px "Comfortaa",sans-serif; }
+    .auth-eyebrow { margin:0 0 12px; color:var(--green); font:700 10px "Comfortaa",sans-serif; letter-spacing:.14em; }
+    .auth-card h1 { margin:0 0 10px; font:600 clamp(25px,5vw,32px)/1.2 "Comfortaa",sans-serif; letter-spacing:-.05em; }
+    .auth-intro { margin:0 0 24px; color:#756b5f; font:13px/1.6 "Comfortaa",sans-serif; }
+    .auth-form { display:grid; gap:13px; }
+    .auth-form [hidden] { display:none !important; }
+    .auth-form label { display:grid; gap:7px; color:#554a40; font:700 11px "Comfortaa",sans-serif; }
+    .auth-form input { width:100%; border:1px solid var(--line); border-radius:9px; padding:12px 13px; background:var(--white); color:var(--ink); font:13px "Comfortaa",sans-serif; }
+    .auth-feedback { min-height:18px; margin:0; color:#9d4036; font:11px/1.5 "Comfortaa",sans-serif; }
+    .auth-submit,.demo-button { width:100%; min-height:44px; border-radius:9px; font:700 12px "Comfortaa",sans-serif; }
+    .auth-switch { width:100%; margin:15px 0 19px; border:0; background:none; color:#755044; text-decoration:underline; text-underline-offset:3px; font:11px "Comfortaa",sans-serif; }
+    .auth-divider { display:flex; align-items:center; gap:12px; margin:0 0 15px; color:#9b8d7e; font:10px "Comfortaa",sans-serif; }
+    .auth-divider::before,.auth-divider::after { height:1px; flex:1; background:#e8ded1; content:""; }
+    .demo-button { border:1px solid var(--line); background:#f4eddf; color:#554a40; }
+    .demo-button:hover { background:#e9ddc9; }
+    .auth-note { margin:17px 0 0; color:#8b7e70; text-align:center; font:10px/1.5 "Comfortaa",sans-serif; }
+    .resume-section { scroll-margin-top:88px; }
+    .welcome-card { width:min(500px,100%); text-align:center; }
+    .welcome-card .auth-mark { margin:0 auto 23px; }
+    .welcome-card h1 { margin-bottom:12px; }
+    .welcome-copy { color:#756b5f; font:13px/1.6 "Comfortaa",sans-serif; }
+    .welcome-progress { height:4px; margin:25px auto 0; overflow:hidden; border-radius:9px; background:#ddcfb9; }
+    .welcome-progress span { display:block; width:0; height:100%; border-radius:inherit; background:var(--green); animation:welcome-load 1.8s ease forwards; }
+    @keyframes welcome-load { to { width:100%; } }
+    @media (max-width:620px) { .account-label { display:none; } .sign-out-button { font-size:9px; } .auth-screen,.welcome-screen { padding:16px; } }
+    /* A more lived-in fieldbook palette, with ink, clay, moss, and faded blue. */
+    :root {
+      --ink:#302821; --muted:#706455; --line:#d9cbb7; --paper:#f1ebdf; --white:#fffaf1;
+      --green:#85483b; --green-deep:#5e382f; --mint:#e8ece0; --blue:#dfe8ee; --lilac:#eee4ed;
+      --shadow:0 4px 15px rgba(53,42,30,.07);
+    }
+    .brand-mark { background:var(--green); }
+    .button-primary { background:var(--green); }
+    .button-primary:hover { background:var(--green-deep); }
+    .eyebrow,.step-num,.sample-badge { color:var(--green); }
+    .selected .check { background:var(--green); border-color:var(--green); }
+    .search:focus,textarea:focus,input:focus,select:focus { border-color:var(--green); box-shadow:0 0 0 2px rgba(133,72,59,.15); }
+    .topbar { background:#f5eddf; border-bottom-color:#cdbda6; }
+    .hero { border-bottom-color:#bba88e; }
+    .hero .spark { background:#c09445; }
+    .workspace > .panel:first-child { background:#fffaf1; }
+    .workspace > .builder-panel { background:#f7f1e7; }
+    .resume-section { background:#fbf7ef; }
+    .workspace > .panel:first-child .panel-head { background:#eee3d2; }
+    .workspace > .builder-panel .panel-head { background:#e6ecea; }
+    .resume-section > .panel-head { background:#eee8dc; }
+    .evidence-card:nth-child(3n + 1) { border-left:3px solid #a15a46; padding-left:10px; }
+    .evidence-card:nth-child(3n + 2) { border-left:3px solid #718264; padding-left:10px; }
+    .evidence-card:nth-child(3n) { border-left:3px solid #71889a; padding-left:10px; }
+    .evidence-card.selected { border-top:1px solid #d3c0a3; border-right:1px solid #d3c0a3; border-bottom:1px solid #d3c0a3; border-left-width:4px; padding-left:9px; background:#f4eadb; }
+    .tag,.tag.blue,.tag.lilac { border:0; border-radius:999px; padding:4px 8px; }
+    .tag { background:#eee2d1; color:#67483b; }
+    .tag.blue { background:#e2ebef; color:#435f6c; }
+    .tag.lilac { background:#eee5e9; color:#6e505e; }
+    .skill-index { margin:2px 0 13px; padding:11px 12px 12px; border:1px solid #d9cbb7; background:#f3ecdf; }
+    .skill-index[hidden] { display:none !important; }
+    .skill-index-head { display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-bottom:9px; color:#564a3c; font:700 10px "Comfortaa",sans-serif; letter-spacing:.04em; }
+    .skill-index-head span:last-child { color:#877969; font:10px "Comfortaa",sans-serif; letter-spacing:0; }
+    .skill-filter-list { display:flex; flex-wrap:wrap; gap:6px; }
+    .skill-filter { display:inline-flex; align-items:center; gap:6px; border:1px solid #d1c2ad; border-radius:999px; padding:5px 9px; background:#fffaf1; color:#5a4a3c; font:10px "Comfortaa",sans-serif; transition:background .15s,color .15s,border-color .15s; }
+    .skill-filter:hover { border-color:#a15a46; }
+    .skill-filter[aria-pressed="true"] { border-color:#354a3f; background:#354a3f; color:#fffaf1; }
+    .skill-filter-count { opacity:.72; font-size:9px; }
+    .skill-picks { padding:9px 10px; border-left:2px solid #c09445; background:#f6f0e4; }
+    .skill-picks-label { display:block; margin-bottom:7px; color:#74624a; font:700 9px "Comfortaa",sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+    .skill-pick-row { display:flex; flex-wrap:wrap; gap:5px; }
+    .skill-pick { border:1px solid #d7c8b2; border-radius:999px; padding:5px 8px; background:#fffaf1; color:#5f5142; font:9px "Comfortaa",sans-serif; }
+    .skill-pick:hover { border-color:#a15a46; }
+    .skill-pick[aria-pressed="true"] { border-color:#718264; background:#e7ecdf; color:#3d533c; }
+    .career-clue-preview { margin:9px 0 0; padding-left:9px; border-left:2px solid #c09445; color:#62513b; font-size:11px; line-height:1.5; }
+    .career-clue-preview strong { display:block; margin-bottom:2px; color:#92713a; font:700 9px "Comfortaa",sans-serif; letter-spacing:.07em; text-transform:uppercase; }
+    .career-clue-input { min-height:66px !important; resize:vertical; }
+    @media (max-width:620px) { .skill-index-head { align-items:flex-start; flex-direction:column; gap:4px; } }
+    /* Shared color roles: paper, clay actions, one blue family, and sage for added items. */
+    :root {
+      --paper:#f2ede3; --white:#fffcf6; --ink:#302a24; --muted:#70675c; --line:#d9cebd;
+      --clay:#894a3b; --clay-deep:#67382e; --clay-soft:#f2e6dc;
+      --blue:#e5edf1; --blue-line:#c5d2d8; --blue-ink:#4d6570;
+      --sage:#e8ece2; --sage-ink:#4e5b44; --ochre:#bd9144; --ochre-soft:#f3ead5;
+      --green:var(--clay); --green-deep:var(--clay-deep); --mint:var(--sage); --lilac:var(--sage);
+      --shadow:0 4px 14px rgba(54,44,34,.07);
+    }
+    body { color:var(--ink); background:var(--paper); }
+    .topbar { background:#f7f2e9; border-bottom-color:var(--line); }
+    .brand-mark,.button-primary,.auth-mark { background:var(--clay); }
+    .button-primary:hover { background:var(--clay-deep); }
+    .button-dark,.toast { background:var(--ink); }
+    .button-dark:hover { background:#494138; }
+    .button-light,.demo-button { background:#f7f2e9; border-color:var(--line); color:var(--ink); }
+    .button-light:hover,.demo-button:hover { background:#eee6d8; }
+    .hero { border-bottom-color:#cfc1ae; }
+    .eyebrow,.step-num,.sample-badge,.delete-entry:hover { color:var(--clay); }
+    .hero .spark { background:var(--ochre); }
+    .panel { background:var(--white); border-color:var(--line); box-shadow:var(--shadow); }
+    .panel-head { background:#f7f2e9; border-bottom-color:var(--line); }
+    .workspace > .panel:first-child { background:var(--white); }
+    .workspace > .panel:first-child .panel-head,.resume-section > .panel-head { background:#efe7d9; }
+    .workspace > .builder-panel { background:#f4f7f7; }
+    .workspace > .builder-panel .panel-head { background:var(--blue); border-bottom-color:var(--blue-line); }
+    .resume-section { background:var(--white); }
+    .search,select,input[type="number"],.prompt-input,.resume-add input[type="text"],.idea-notes,.resume-input,.draft-area,.modal-body input,.modal-body textarea,.auth-form input { border-color:var(--line); background-color:var(--white); color:var(--ink); }
+    .search:focus,textarea:focus,input:focus,select:focus { border-color:var(--clay); box-shadow:0 0 0 2px rgba(137,74,59,.15); }
+    .draft-area { background-image:linear-gradient(to right,transparent 0,transparent 27px,rgba(137,74,59,.2) 28px,transparent 29px),repeating-linear-gradient(to bottom,transparent 0,transparent 27px,#e5dccd 28px,#e5dccd 29px); }
+    .empty-state,.resume-add { background:#f7f2e9; border-color:var(--line); }
+    .evidence-card:nth-child(3n + 1) { border-left-color:var(--clay); }
+    .evidence-card:nth-child(3n + 2) { border-left-color:#82906f; }
+    .evidence-card:nth-child(3n) { border-left-color:#718a96; }
+    .evidence-card.selected { background:var(--clay-soft); border-top-color:#d9bdac; border-right-color:#d9bdac; border-bottom-color:#d9bdac; }
+    .selected .check { background:var(--clay); border-color:var(--clay); }
+    .tag { color:#68483c; background:#f0e4d6; }
+    .tag.blue { color:var(--blue-ink); background:var(--blue); }
+    .tag.lilac { color:var(--sage-ink); background:var(--sage); }
+    .skill-index,.skill-picks { background:var(--blue); border-color:var(--blue-line); }
+    .skill-index { border-left:3px solid #718a96; }
+    .skill-index-head { color:var(--blue-ink); }
+    .skill-index-head span:last-child { color:#697d86; }
+    .skill-filter,.skill-pick { background:#f9fbfc; border-color:var(--blue-line); color:var(--blue-ink); }
+    .skill-filter:hover,.skill-pick:hover { border-color:#718a96; }
+    .skill-filter[aria-pressed="true"] { border-color:var(--blue-ink); background:var(--blue-ink); color:#fff; }
+    .skill-pick[aria-pressed="true"] { border-color:#82906f; background:var(--sage); color:var(--sage-ink); }
+    .skill-picks { border-left-color:var(--blue-ink); }
+    .career-clue-preview { border-left-color:var(--ochre); background:var(--ochre-soft); color:#5e5039; }
+    .career-clue-preview strong { color:#85672f; }
+    .feedback { border-left-color:#82906f; background:var(--sage); color:var(--sage-ink); }
+    .feedback.warn { border-left-color:var(--ochre); background:var(--ochre-soft); color:#725a2f; }
+    .feedback.error { border-left-color:var(--clay); background:var(--clay-soft); color:var(--clay-deep); }
+    .proof-link { border-color:var(--blue-line); background:var(--blue); color:var(--blue-ink); }
+    .proof-link:hover { border-color:#718a96; background:#dce7ec; }
+    .diff-list { border-color:var(--line); background:var(--white); }
+    .diff-added { background:var(--sage); color:var(--sage-ink); }
+    .diff-removed { background:var(--clay-soft); color:var(--clay-deep); }
+    .resume-add { background:#f7f2e9; }
+    .auth-screen,.welcome-screen { background:var(--paper); }
+    .auth-card { border-color:var(--line); background:var(--white); }
+    .auth-mark { background:var(--clay); }
+    .auth-eyebrow { color:var(--clay); }
+    .auth-form input { border-color:var(--line); background:var(--white); color:var(--ink); }
+    .welcome-progress { background:#dfd4c2; }
+    .welcome-progress span { background:var(--clay); }
+    .dialog { border-color:var(--line); background:var(--white); box-shadow:0 16px 45px rgba(54,44,34,.2); }
+    dialog { border-color:var(--line); background:var(--white); box-shadow:0 16px 45px rgba(54,44,34,.2); }
+    dialog::backdrop { background:rgba(48,42,36,.4); }
+    .modal-head { border-bottom-color:var(--line); }
+    .char-count.over,.delete-entry:hover,.resume-row-actions button:hover { color:var(--clay); }
+    .notebook-spiral { background-image:radial-gradient(circle at center,transparent 0 4px,#9b8d7c 4.5px 5.5px,transparent 6px); }
+  </style>
+</head>
+<body class="auth-open">
+  <div class="notebook-spiral" aria-hidden="true"></div>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">PB</span><span>ProofBank</span></div>
+    <div class="top-actions">
+      <span class="account-label" id="accountLabel" aria-live="polite"></span>
+      <button class="sign-out-button" id="signOutButton" type="button">Sign out</button>
+      <span class="private-pill">● &nbsp; Saved on this device</span>
+      <button class="button button-primary button-small" id="topAdd">+ New note</button>
+    </div>
+  </header>
+
+  <section class="auth-screen" id="authScreen" aria-labelledby="authTitle">
+    <div class="auth-card">
+      <div class="auth-mark">PB</div>
+      <p class="auth-eyebrow">YOUR EXPERIENCE JOURNAL</p>
+      <h1 id="authTitle">Make a little room for your story.</h1>
+      <p class="auth-intro" id="authIntro">Create a username and password to keep your notes and resume copies together.</p>
+      <form class="auth-form" id="authForm">
+        <label for="authUsername">Username
+          <input id="authUsername" name="username" autocomplete="username" minlength="3" maxlength="24" required placeholder="Choose a username">
+        </label>
+        <label for="authPassword">Password
+          <input id="authPassword" name="password" type="password" autocomplete="new-password" minlength="8" required placeholder="At least 8 characters">
+        </label>
+        <label id="confirmPasswordWrap" for="authConfirmPassword">Confirm password
+          <input id="authConfirmPassword" name="confirmPassword" type="password" autocomplete="new-password" minlength="8" placeholder="Type it once more">
+        </label>
+        <p class="auth-feedback" id="authFeedback" role="status" aria-live="polite"></p>
+        <button class="button button-primary auth-submit" id="authSubmit" type="submit">Create my account</button>
+      </form>
+      <button class="auth-switch" id="authModeToggle" type="button">Already have an account? Sign in</button>
+      <div class="auth-divider">OR</div>
+      <button class="demo-button" id="demoButton" type="button">Try the demo</button>
+      <p class="auth-note">This prototype saves accounts and journal entries in this browser only; they do not sync across devices.</p>
+    </div>
+  </section>
+
+  <section class="welcome-screen" id="welcomeScreen" aria-labelledby="welcomeTitle" hidden>
+    <div class="welcome-card">
+      <div class="auth-mark">PB</div>
+      <p class="auth-eyebrow">A FRESH PAGE, <span id="welcomeName">FRIEND</span></p>
+      <h1 id="welcomeTitle">Welcome to ProofBank.</h1>
+      <p class="welcome-copy">Your resume shelf is ready. Let’s pick up where your next story begins.</p>
+      <div class="welcome-progress" aria-hidden="true"><span></span></div>
+    </div>
+  </section>
+
+  <main>
+    <section class="hero" aria-labelledby="pageTitle">
+      <div>
+        <div class="eyebrow"><span class="spark"></span> JOBS · CLASS · CAMPUS LIFE</div>
+        <h1 id="pageTitle">Keep the details.<br>Use them later.</h1>
+        <p>Save what you tried, what changed, and what you learned—while the details are still fresh.</p>
+      </div>
+    </section>
+
+    <section class="workspace" aria-label="ProofBank workspace">
+      <section class="panel" aria-labelledby="bankTitle">
+        <div class="panel-head">
+          <div class="step"><span class="step-num">01 /</span><h2 id="bankTitle">My experience journal</h2></div>
+          <span class="count-label" id="bankStats">0 notes</span>
+        </div>
+        <div class="panel-body">
+          <div class="search-row">
+            <label class="sr-only" for="searchInput">Search experiences</label>
+            <input class="search" id="searchInput" type="search" placeholder="Find a project, skill, or role…">
+            <button class="button button-dark button-small" id="addButton">+ New note</button>
+          </div>
+          <div class="skill-index" id="skillIndex" hidden>
+            <div class="skill-index-head"><span>Skills showing up in your notes</span><span id="skillIndexCount"></span></div>
+            <div class="skill-filter-list" id="skillFilters" aria-label="Filter journal entries by skill"></div>
+          </div>
+          <div class="evidence-list" id="evidenceList" aria-live="polite"></div>
+          <div class="bank-footer">
+            <button class="button button-light button-small" id="exportButton">Export</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel builder-panel" aria-labelledby="builderTitle">
+        <div class="panel-head">
+          <div class="step"><span class="step-num">02 /</span><h2 id="builderTitle">Write from your notes</h2></div>
+          <span class="count-label" id="selectedCount">0 selected</span>
+        </div>
+        <div class="panel-body">
+          <div class="two-fields">
+            <div>
+              <label class="form-label" for="promptType">Prompt</label>
+              <select id="promptType">
+                <option value="excellence">Evidence of excellence</option>
+                <option value="problem">Describe a problem you solved</option>
+                <option value="teamwork">Tell us about teamwork</option>
+                <option value="leadership">Show your leadership</option>
+                <option value="custom">Write my own prompt</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="charLimit">Character limit</label>
+              <input id="charLimit" type="number" min="100" max="10000" value="2500" step="100">
+            </div>
+          </div>
+          <label class="form-label" for="resumeSourceVersion"><span>Resume notes</span><span class="muted-label">Optional source</span></label>
+          <select id="resumeSourceVersion" aria-label="Choose a resume version to draw from"></select>
+          <div id="customPromptWrap" hidden>
+            <label class="form-label" for="customPrompt">Your prompt</label>
+            <textarea class="prompt-input" id="customPrompt" placeholder="Paste the question you need to answer."></textarea>
+          </div>
+          <label class="form-label" for="ideaNotes"><span>Your ideas or draft so far</span><span class="muted-label">Keep your own words</span></label>
+          <textarea class="idea-notes" id="ideaNotes" placeholder="Paste a rough answer or jot key points. Your words will carry into the outline unchanged."></textarea>
+          <div class="form-label"><span>Notes to draw from</span><span class="muted-label">Choose from your journal</span></div>
+          <div id="suggestionText" class="skill-hint">Choose journal notes that help answer the question.</div>
+          <div style="display:flex; gap:8px; margin-top:12px;">
+            <button class="button button-primary" id="buildButton">Make my outline</button>
+            <button class="button button-light button-small" id="clearSelection">Clear</button>
+          </div>
+          <label class="form-label" for="draftText"><span>Your answer outline</span><span class="muted-label">Editable · finish in your voice</span></label>
+          <textarea class="draft-area" id="draftText" placeholder="Jot your ideas, choose a few notes, then make an outline."></textarea>
+          <div class="draft-toolbar">
+            <span class="char-count" id="charCount">0 / 2,500 characters</span>
+            <button class="button button-dark button-small" id="copyButton">Copy outline</button>
+          </div>
+          <div class="feedback" id="feedback" role="status" hidden></div>
+          <div class="proof-links" id="proofLinks" aria-label="Evidence sources for the draft"></div>
+        </div>
+      </section>
+    </section>
+
+    <section class="resume-section panel" aria-labelledby="resumeTitle">
+      <div class="panel-head">
+        <div class="step"><span class="step-num">03 /</span><h2 id="resumeTitle">Resume versions</h2></div>
+        <button class="button button-light button-small" id="exportAllResumes">Export all</button>
+      </div>
+      <div class="resume-intro">Keep older copies. Compare them when your story changes, and take the difference with you.</div>
+      <div class="resume-layout">
+        <div class="resume-add">
+          <label class="form-label" for="resumeVersionName">Give this copy a name</label>
+          <input id="resumeVersionName" type="text" maxlength="60" placeholder="e.g. Fall internship applications">
+          <label class="form-label" for="resumeTextInput">Paste a resume or load text files</label>
+          <textarea class="resume-input" id="resumeTextInput" placeholder="Paste resume text here. You can copy it from Word or a PDF; or choose one or more .txt / .md files below."></textarea>
+          <div class="resume-add-actions">
+            <label class="button button-light button-small file-label" for="resumeFileInput">Choose text files</label>
+            <input id="resumeFileInput" type="file" accept=".txt,.md,text/plain,text/markdown" multiple hidden>
+            <button class="button button-primary button-small" id="saveResumeButton">Save version</button>
+          </div>
+          <p class="small-note">Resume text stays in this browser and isn’t uploaded.</p>
+        </div>
+        <div class="resume-compare">
+          <div class="resume-selects">
+            <div><label class="form-label" for="olderVersion">Compare from</label><select id="olderVersion"></select></div>
+            <div><label class="form-label" for="newerVersion">Compare to</label><select id="newerVersion"></select></div>
+          </div>
+          <div class="diff-heading" id="diffHeading">Save two versions to see what changed.</div>
+          <div class="diff-list" id="diffList" aria-live="polite"><div class="diff-empty">Added lines and removed lines will show up here.</div></div>
+          <div class="diff-actions">
+            <span class="small-note">Sage = added &nbsp; · &nbsp; Clay = removed</span>
+            <button class="button button-dark button-small" id="exportDiffButton">Export changes</button>
+          </div>
+        </div>
+      </div>
+      <div class="resume-shelf-head">Saved copies <span id="resumeCount">0 versions</span></div>
+      <div class="resume-list" id="resumeList"><div class="empty-state">No resume copies yet. Paste a version above to start your shelf.</div></div>
+    </section>
+
+  </main>
+
+  <dialog id="experienceDialog" aria-labelledby="modalTitle">
+    <form id="experienceForm">
+      <div class="modal-head"><h2 id="modalTitle">Add a journal note</h2><button class="icon-button" type="button" id="closeDialog" aria-label="Close">×</button></div>
+      <div class="modal-body">
+        <label>What was the moment?<input id="expTitle" required maxlength="70" placeholder="e.g., Built a sensor prototype"></label>
+        <div class="modal-row">
+          <label>Type<input id="expType" maxlength="32" placeholder="Project, job, club…"></label>
+          <label>Your role<input id="expRole" maxlength="50" placeholder="e.g., Project lead"></label>
+        </div>
+        <label>What did you do?<textarea id="expAction" required maxlength="350" placeholder="Describe your own actions in plain language."></textarea></label>
+        <label>What happened as a result?<textarea id="expResult" required maxlength="280" placeholder="Add an outcome, test result, or what changed."></textarea></label>
+        <label>Skills shown <span class="form-help">Separate with commas</span><input id="expSkills" maxlength="100" placeholder="Problem solving, teamwork, communication"></label>
+        <div class="skill-picks">
+          <span class="skill-picks-label">Quick add</span>
+          <div class="skill-pick-row" aria-label="Suggested career readiness skills">
+            <button class="skill-pick" type="button" data-skill="Communication" aria-pressed="false">Communication</button>
+            <button class="skill-pick" type="button" data-skill="Critical thinking" aria-pressed="false">Critical thinking</button>
+            <button class="skill-pick" type="button" data-skill="Teamwork" aria-pressed="false">Teamwork</button>
+            <button class="skill-pick" type="button" data-skill="Professionalism" aria-pressed="false">Professionalism</button>
+            <button class="skill-pick" type="button" data-skill="Career &amp; self-development" aria-pressed="false">Career &amp; self-development</button>
+            <button class="skill-pick" type="button" data-skill="Leadership" aria-pressed="false">Leadership</button>
+            <button class="skill-pick" type="button" data-skill="Technology" aria-pressed="false">Technology</button>
+          </div>
+        </div>
+        <label>What I liked doing <span class="form-help">Optional · helps you choose what to try again</span><textarea class="career-clue-input" id="expCareerClue" maxlength="220" placeholder="I liked testing the hardware more than writing the report."></textarea></label>
+        <div class="modal-actions"><button class="button button-light" type="button" id="cancelDialog">Cancel</button><button class="button button-primary" type="submit">Save note</button></div>
+      </div>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const LEGACY_STORE_KEY = 'proofbank-evidence-v1';
+    const LEGACY_RESUME_STORE_KEY = 'proofbank-resume-versions-v1';
+    const ACCOUNT_STORE_KEY = 'proofbank-local-accounts-v1';
+    const ACTIVE_USER_KEY = 'proofbank-active-profile-v1';
+    let STORE_KEY = LEGACY_STORE_KEY;
+    let RESUME_STORE_KEY = LEGACY_RESUME_STORE_KEY;
+    let useSampleEntries = true;
+    let activeProfile = null;
+    let authMode = 'create';
+    let welcomeTimer;
+    const sampleEntries = [
+      {
+        id: 'sample-robot', sample: true, title: 'Robot sorting build', type: 'Engineering project', role: 'Camera setup',
+        action: 'helped get the camera working on a small sorting robot and tried a few settings while it ran',
+        result: 'It missed the darker pieces on our first run. I changed the exposure and tested it again, but I still need to check how it handles room lighting.',
+        careerClue: 'I liked watching a real test and fixing one thing at a time.',
+        skills: ['Problem solving', 'Technology', 'Iteration'],
+        promptTags: ['excellence', 'problem']
+      },
+      {
+        id: 'sample-team', sample: true, title: 'Student club demo', type: 'Club project', role: 'Project coordinator',
+        action: 'kept a shared task list and checked in with people who were stuck',
+        result: 'We got a demo ready for the club showcase. We ran out of time for a couple ideas, so next time I’d pick the must-have features earlier.',
+        careerClue: 'I liked keeping the group moving, but still wanted a hands-on part.',
+        skills: ['Leadership', 'Teamwork', 'Communication'],
+        promptTags: ['excellence', 'teamwork', 'leadership']
+      },
+      {
+        id: 'sample-tutor', sample: true, title: 'Algebra tutoring shift', type: 'Campus job', role: 'Peer tutor',
+        action: 'used short algebra examples and asked students to explain the next step back to me',
+        result: 'One student needed a drawing instead of another equation. I switched approaches, and they got through the rest of the practice.',
+        careerClue: 'I like finding another way to explain something.',
+        skills: ['Communication', 'Adaptability', 'Service'],
+        promptTags: ['excellence', 'problem', 'teamwork']
+      },
+      {
+        id: 'sample-lab', sample: true, title: 'Sensor readings lab', type: 'Coursework', role: 'Lab partner',
+        action: 'wrote down sensor readings, compared them with a reference, and ran another set after recalibrating',
+        result: 'Our readings were closer together after the retest. We left setup notes so another group could try the same steps.',
+        skills: ['Attention to detail', 'Technical', 'Documentation'],
+        promptTags: ['problem', 'excellence']
+      }
+    ];
+
+    const promptInfo = {
+      excellence: { name: 'Evidence of Excellence', match: ['Problem solving', 'Technology', 'Leadership', 'Iteration'] },
+      problem: { name: 'Describe a problem you solved', match: ['Problem solving', 'Iteration', 'Technical', 'Attention to detail'] },
+      teamwork: { name: 'Tell us about teamwork', match: ['Teamwork', 'Communication', 'Adaptability'] },
+      leadership: { name: 'Show your leadership', match: ['Leadership', 'Teamwork', 'Communication'] },
+      custom: { name: 'Custom prompt', match: [] }
+    };
+    let entries = loadEntries();
+    let selectedIds = new Set(['sample-robot', 'sample-team']);
+    let resumeVersions = loadResumeVersions();
+    let currentDiff = [];
+    let activeSkillFilter = '';
+    let toastTimer;
+
+    function loadEntries() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORE_KEY));
+        if (Array.isArray(saved)) return saved;
+      } catch (error) { /* Keep the demo usable when storage is unavailable. */ }
+      return useSampleEntries ? structuredClone(sampleEntries) : [];
+    }
+    function loadResumeVersions() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(RESUME_STORE_KEY));
+        if (Array.isArray(saved)) return saved;
+      } catch (error) { /* A damaged backup should not stop the journal from opening. */ }
+      return [];
+    }
+    function saveEntries() {
+      try { localStorage.setItem(STORE_KEY, JSON.stringify(entries)); }
+      catch (error) { showToast('This browser could not save locally. Export your examples to keep a backup.'); }
+    }
+    function escapeHtml(value = '') {
+      return String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+    }
+    function tagClass(index) { return index % 3 === 1 ? 'blue' : index % 3 === 2 ? 'lilac' : ''; }
+    function currentPrompt() { return document.getElementById('promptType').value; }
+    function filteredEntries() {
+      const query = document.getElementById('searchInput').value.trim().toLowerCase();
+      return entries.filter(entry => {
+        const matchesQuery = !query || [entry.title, entry.type, entry.role, entry.action, entry.result, entry.careerClue || '', ...(entry.skills || [])].join(' ').toLowerCase().includes(query);
+        const matchesSkill = !activeSkillFilter || (entry.skills || []).some(skill => skill.trim().toLowerCase() === activeSkillFilter);
+        return matchesQuery && matchesSkill;
+      });
+    }
+    function renderSkillFilters() {
+      const counts = new Map();
+      entries.forEach(entry => {
+        const entrySkills = new Set();
+        (entry.skills || []).forEach(skill => {
+          const label = skill.trim();
+          const key = label.toLowerCase();
+          if (!key || entrySkills.has(key)) return;
+          entrySkills.add(key);
+          const current = counts.get(key) || {label, count:0};
+          current.count++;
+          counts.set(key, current);
+        });
+      });
+      const index = document.getElementById('skillIndex');
+      const filters = document.getElementById('skillFilters');
+      if (!counts.size) {
+        activeSkillFilter = '';
+        index.hidden = true;
+        return;
+      }
+      if (!counts.has(activeSkillFilter)) activeSkillFilter = '';
+      index.hidden = false;
+      document.getElementById('skillIndexCount').textContent = `${counts.size} skill${counts.size === 1 ? '' : 's'} · tap to filter`;
+      filters.innerHTML = `<button class="skill-filter" type="button" data-skill="" aria-pressed="${!activeSkillFilter}">All notes <span class="skill-filter-count">${entries.length}</span></button>` +
+        [...counts.entries()].map(([key, item]) => `<button class="skill-filter" type="button" data-skill="${escapeHtml(key)}" aria-pressed="${activeSkillFilter === key}">${escapeHtml(item.label)} <span class="skill-filter-count">${item.count}</span></button>`).join('');
+      filters.querySelectorAll('.skill-filter').forEach(button => button.addEventListener('click', () => {
+        activeSkillFilter = button.dataset.skill;
+        renderEntries();
+      }));
+    }
+    function renderEntries() {
+      const list = document.getElementById('evidenceList');
+      renderSkillFilters();
+      selectedIds = new Set([...selectedIds].filter(id => entries.some(entry => entry.id === id)));
+      const visible = filteredEntries();
+      if (!visible.length) {
+        list.innerHTML = '<div class="empty-state">No matches yet. Try another keyword or add a new experience.</div>';
+      } else {
+        list.innerHTML = visible.map(entry => {
+          const selected = selectedIds.has(entry.id);
+          const tags = (entry.skills || []).map((skill, i) => `<span class="tag ${tagClass(i)}">${escapeHtml(skill)}</span>`).join('');
+          return `<article class="evidence-card ${selected ? 'selected' : ''}" data-id="${escapeHtml(entry.id)}" tabindex="0" role="checkbox" aria-checked="${selected}" aria-label="${escapeHtml(entry.title)}${selected ? ', selected' : ''}">
+            <span class="check" aria-hidden="true">✓</span>
+            <div class="card-content"><div class="entry-title-row"><h3 class="card-title">${escapeHtml(entry.title)}</h3><div class="entry-actions">
+              <span class="sample-badge">${entry.sample ? 'EXAMPLE' : 'MY NOTE'}</span>
+              <button class="delete-entry" type="button" data-id="${escapeHtml(entry.id)}" aria-label="Delete ${escapeHtml(entry.title)}">Delete</button>
+            </div></div>
+              <div class="card-meta"><span>${escapeHtml(entry.type || 'Experience')}</span><span>·</span><span>${escapeHtml(entry.role || 'Contributor')}</span></div>
+              <p class="card-summary">${escapeHtml(entry.action)}. ${escapeHtml(entry.result)}</p>
+              ${entry.careerClue ? `<p class="career-clue-preview"><strong>What I liked</strong>${escapeHtml(entry.careerClue)}</p>` : ''}
+              <div class="tag-row">${tags}</div></div>
+          </article>`;
+        }).join('');
+      }
+      list.querySelectorAll('.evidence-card').forEach(card => {
+        card.addEventListener('click', () => toggleEntry(card.dataset.id));
+        card.addEventListener('keydown', event => { if (event.target.closest('.delete-entry')) return; if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); toggleEntry(card.dataset.id); } });
+      });
+      list.querySelectorAll('.delete-entry').forEach(button => button.addEventListener('click', event => {
+        event.stopPropagation(); deleteExperience(button.dataset.id);
+      }));
+      const selectedCount = selectedIds.size;
+      document.getElementById('selectedCount').textContent = `${selectedCount} selected`;
+      document.getElementById('bankStats').textContent = `${entries.length} note${entries.length === 1 ? '' : 's'}`;
+      renderSuggestions();
+    }
+    function toggleEntry(id) {
+      if (selectedIds.has(id)) selectedIds.delete(id); else selectedIds.add(id);
+      renderEntries();
+    }
+    function deleteExperience(id) {
+      const entry = entries.find(item => item.id === id);
+      if (!entry || !window.confirm(`Delete “${entry.title}” from your journal?`)) return;
+      const outlineUsedIt = document.getElementById('draftText').value.includes(entry.title);
+      entries = entries.filter(item => item.id !== id);
+      selectedIds.delete(id);
+      saveEntries();
+      renderEntries();
+      document.querySelectorAll(`.proof-link[data-kind="entry"][data-id="${CSS.escape(id)}"]`).forEach(link => link.remove());
+      if (!entries.some(item => selectedIds.has(item.id))) {
+        document.getElementById('draftText').value = '';
+        document.getElementById('proofLinks').innerHTML = '';
+        updateCounter();
+        setFeedback('warn', 'That note is deleted. Choose another journal entry or add a new one.');
+      } else if (outlineUsedIt) setFeedback('warn', 'This outline may still mention the deleted note. Make a new outline to refresh it.');
+      showToast('Journal note deleted.');
+    }
+    function renderSuggestions() {
+      const key = currentPrompt();
+      const info = promptInfo[key];
+      const suggested = entries.filter(entry => (entry.promptTags || []).includes(key));
+      const resumeText = resumeVersions.length ? ' Resume lines can be added too.' : '';
+      const text = key === 'custom'
+        ? `Choose any journal notes that help answer your question.${resumeText}`
+        : `${suggested.length} note${suggested.length === 1 ? '' : 's'} match this prompt. Choose the ones you want to use.${resumeText}`;
+      document.getElementById('suggestionText').textContent = text;
+    }
+    function updateCounter() {
+      const draft = document.getElementById('draftText');
+      const limit = Math.max(100, Number(document.getElementById('charLimit').value) || 2500);
+      const count = draft.value.length;
+      const display = document.getElementById('charCount');
+      display.textContent = `${count.toLocaleString()} / ${limit.toLocaleString()} characters`;
+      display.classList.toggle('near', count > limit * .9 && count <= limit);
+      display.classList.toggle('over', count > limit);
+      if (count > limit) setFeedback('error', `This outline is ${count - limit} characters over the limit. Trim it before submitting.`);
+      else if (document.getElementById('feedback').classList.contains('error')) setFeedback('good', 'Back within the character limit. Keep editing in your own voice.');
+    }
+    function setFeedback(type, message) {
+      const feedback = document.getElementById('feedback');
+      feedback.hidden = false;
+      feedback.className = `feedback ${type === 'good' ? '' : type}`;
+      feedback.innerHTML = `<span>${type === 'error' ? '!' : type === 'warn' ? '•' : '✎'}</span><span>${escapeHtml(message)}</span>`;
+    }
+    function clearFeedback() {
+      const feedback = document.getElementById('feedback');
+      feedback.hidden = true;
+      feedback.className = 'feedback';
+      feedback.textContent = '';
+    }
+    function currentPromptText() {
+      const key = currentPrompt();
+      return key === 'custom'
+        ? (document.getElementById('customPrompt').value.trim() || 'Your own application question')
+        : promptInfo[key].name;
+    }
+    function usefulWords(text) {
+      const common = new Set(['about','after','again','also','and','are','because','been','before','being','between','could','describe','does','each','from','have','into','just','more','most','other','should','some','than','that','their','there','these','they','this','through','under','very','what','when','where','which','while','with','would','your','you','tell','show','work','experience','example','evidence','question','answer']);
+      return [...new Set((text.toLowerCase().match(/[a-z0-9]+/g) || []).filter(word => word.length > 2 && !common.has(word)))];
+    }
+    function getSelectedResume() {
+      const selectedId = document.getElementById('resumeSourceVersion').value;
+      return resumeVersions.find(version => version.id === selectedId) || resumeVersions[0] || null;
+    }
+    function matchingResumeLines(version, tokens) {
+      if (!version || !tokens.length) return [];
+      const ranked = (version.text || '').split(/\r?\n/)
+        .map(line => line.trim())
+        .filter(line => line.length > 8)
+        .map(line => ({line, score:tokens.reduce((score, token) => score + (line.toLowerCase().includes(token) ? 1 : 0), 0)}))
+        .filter(item => item.score > 0)
+        .sort((a,b) => b.score - a.score);
+      const seen = new Set();
+      return ranked.filter(item => {
+        const key = item.line.toLowerCase();
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      }).slice(0,4).map(item => item.line);
+    }
+    function buildDraft() {
+      const selected = entries.filter(entry => selectedIds.has(entry.id));
+      const prompt = currentPrompt();
+      const question = currentPromptText();
+      const ideas = document.getElementById('ideaNotes').value.trim();
+      const resume = getSelectedResume();
+      const entryWords = selected.map(entry => [entry.title, entry.action, entry.result, entry.careerClue || '', ...(entry.skills || [])].join(' ')).join(' ');
+      const resumeLines = matchingResumeLines(resume, usefulWords(`${question} ${ideas} ${entryWords}`));
+      const experienceNotes = selected.length
+        ? selected.map((entry,index) => `${index + 1}. ${entry.title}\nWhat I did: ${entry.action}\nWhat happened: ${entry.result}${entry.skills?.length ? `\nSkills in this note: ${entry.skills.join(', ')}` : ''}${entry.careerClue ? `\nWhat I liked: ${entry.careerClue}` : ''}`).join('\n\n')
+        : '[Choose a journal note on the left, or add one that fits this question.]';
+      const resumeNotes = resumeLines.length
+        ? resumeLines.map(line => `• ${line}`).join('\n')
+        : resume ? '[No close match found. Read the resume copy and choose a line yourself.]' : '[Save a resume copy to pull in lines you have already written.]';
+      const draft = [
+        `THE QUESTION\n${question}`,
+        `MY WORDS SO FAR\n${ideas || '[Write your point, opinion, or key words here in your own words.]'}`,
+        `MOMENTS FROM MY JOURNAL\n${experienceNotes}`,
+        `LINES FROM ${resume ? resume.title.toUpperCase() : 'MY RESUME'}\n${resumeNotes}`,
+        `MY CONNECTION\n[Why does this moment matter for the question? Add the context only you know.]`
+      ].join('\n\n');
+      document.getElementById('draftText').value = draft;
+      updateCounter();
+      const links = document.getElementById('proofLinks');
+      const entryLinks = selected.map(entry => `<button type="button" class="proof-link" data-kind="entry" data-id="${escapeHtml(entry.id)}">Journal: ${escapeHtml(entry.title)}</button>`);
+      const resumeLink = resume && resumeLines.length ? [`<button type="button" class="proof-link" data-kind="resume" data-id="${escapeHtml(resume.id)}">Resume: ${escapeHtml(resume.title)}</button>`] : [];
+      links.innerHTML = [...entryLinks, ...resumeLink].join('');
+      links.querySelectorAll('.proof-link').forEach(button => button.addEventListener('click', () => {
+        if (button.dataset.kind === 'resume') {
+          document.querySelector('.resume-section').scrollIntoView({behavior:'smooth', block:'start'});
+          document.getElementById('resumeSourceVersion').value = button.dataset.id;
+          return;
+        }
+        const card = [...document.querySelectorAll('.evidence-card')].find(item => item.dataset.id === button.dataset.id);
+        if (card) { card.scrollIntoView({behavior:'smooth', block:'center'}); card.focus(); }
+      }));
+      const sourceParts = [];
+      if (ideas) sourceParts.push('your draft or ideas');
+      if (selected.length) sourceParts.push(`${selected.length} journal note${selected.length === 1 ? '' : 's'}`);
+      if (resumeLines.length) sourceParts.push(`${resumeLines.length} resume line${resumeLines.length === 1 ? '' : 's'}`);
+      if (draft.length > Math.max(100, Number(document.getElementById('charLimit').value) || 2500)) setFeedback('error', `This outline is ${draft.length - Math.max(100, Number(document.getElementById('charLimit').value) || 2500)} characters over the limit. Trim it before submitting.`);
+      else if (!ideas && !selected.length && !resumeLines.length) clearFeedback();
+      else setFeedback('good', `Added ${sourceParts.join(', ')} to the outline.`);
+    }
+    function saveResumeVersions() {
+      try { localStorage.setItem(RESUME_STORE_KEY, JSON.stringify(resumeVersions)); }
+      catch (error) { showToast('This browser could not save the resume copies. Export a backup first.'); }
+    }
+    function addResumeVersion(title, text) {
+      const version = {id:`resume-${Date.now()}-${Math.random().toString(36).slice(2,7)}`, title:title || `Resume copy ${resumeVersions.length + 1}`, createdAt:new Date().toISOString(), text:text.trim()};
+      resumeVersions.unshift(version);
+      saveResumeVersions();
+      renderResumeVersions();
+      document.getElementById('resumeSourceVersion').value = version.id;
+      if (resumeVersions.length > 1) {
+        document.getElementById('olderVersion').value = resumeVersions[1].id;
+        document.getElementById('newerVersion').value = version.id;
+        updateComparison();
+      }
+      renderSuggestions();
+      showToast(`“${version.title}” saved on this device.`);
+      return version;
+    }
+    function renderResumeSourceSelector() {
+      const select = document.getElementById('resumeSourceVersion');
+      const previousValue = select.value;
+      if (!resumeVersions.length) {
+        select.innerHTML = '<option value="">No resume copies saved</option>';
+        select.disabled = true;
+        return;
+      }
+      select.disabled = false;
+      select.innerHTML = resumeVersions.map(version => `<option value="${escapeHtml(version.id)}">${escapeHtml(version.title)} · ${escapeHtml(new Date(version.createdAt).toLocaleDateString())}</option>`).join('');
+      select.value = resumeVersions.some(version => version.id === previousValue) ? previousValue : resumeVersions[0].id;
+    }
+    function renderResumeVersions() {
+      const list = document.getElementById('resumeList');
+      document.getElementById('resumeCount').textContent = `${resumeVersions.length} version${resumeVersions.length === 1 ? '' : 's'}`;
+      if (!resumeVersions.length) {
+        list.innerHTML = '<div class="empty-state">No resume copies yet. Paste a version above to start your shelf.</div>';
+      } else {
+        list.innerHTML = resumeVersions.map(version => {
+          const date = new Date(version.createdAt).toLocaleDateString(undefined, {month:'short',day:'numeric',year:'numeric'});
+          const lineCount = (version.text.match(/\r?\n/g) || []).length + 1;
+          return `<div class="resume-row" data-id="${escapeHtml(version.id)}"><div><div class="resume-row-title">${escapeHtml(version.title)}</div><div class="resume-row-meta">Saved ${escapeHtml(date)} · ${lineCount} lines</div></div><div class="resume-row-actions"><button type="button" data-action="download" data-id="${escapeHtml(version.id)}">Download</button><button type="button" data-action="delete" data-id="${escapeHtml(version.id)}">Delete</button></div></div>`;
+        }).join('');
+      }
+      renderResumeSourceSelector();
+      updateComparison();
+      list.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => {
+        const version = resumeVersions.find(item => item.id === button.dataset.id);
+        if (button.dataset.action === 'download' && version) downloadTextFile(`${safeFileName(version.title)}.txt`, version.text);
+        if (button.dataset.action === 'delete') deleteResumeVersion(button.dataset.id);
+      }));
+    }
+    function compareLines(olderText, newerText) {
+      const older = olderText.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+      const newer = newerText.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+      const rows = Array.from({length:older.length + 1}, () => new Uint16Array(newer.length + 1));
+      for (let i = older.length - 1; i >= 0; i--) {
+        for (let j = newer.length - 1; j >= 0; j--) {
+          rows[i][j] = older[i] === newer[j] ? rows[i + 1][j + 1] + 1 : Math.max(rows[i + 1][j], rows[i][j + 1]);
+        }
+      }
+      const changes = [];
+      let i = 0, j = 0;
+      while (i < older.length && j < newer.length) {
+        if (older[i] === newer[j]) { i++; j++; }
+        else if (rows[i + 1][j] >= rows[i][j + 1]) changes.push({type:'removed', text:older[i++]});
+        else changes.push({type:'added', text:newer[j++]});
+      }
+      while (i < older.length) changes.push({type:'removed', text:older[i++]});
+      while (j < newer.length) changes.push({type:'added', text:newer[j++]});
+      return changes;
+    }
+    function updateComparison() {
+      const olderSelect = document.getElementById('olderVersion');
+      const newerSelect = document.getElementById('newerVersion');
+      const diffList = document.getElementById('diffList');
+      const heading = document.getElementById('diffHeading');
+      const oldValue = olderSelect.value;
+      const newValue = newerSelect.value;
+      const options = resumeVersions.map(version => `<option value="${escapeHtml(version.id)}">${escapeHtml(version.title)} · ${escapeHtml(new Date(version.createdAt).toLocaleDateString())}</option>`).join('');
+      olderSelect.innerHTML = options || '<option value="">Save two versions first</option>';
+      newerSelect.innerHTML = options || '<option value="">Save two versions first</option>';
+      if (resumeVersions.length < 2) {
+        if (resumeVersions.length === 1) olderSelect.value = newerSelect.value = resumeVersions[0].id;
+        currentDiff = [];
+        heading.textContent = 'Save two versions to see what changed.';
+        diffList.innerHTML = '<div class="diff-empty">Added lines and removed lines will show up here.</div>';
+        document.getElementById('exportDiffButton').disabled = true;
+        return;
+      }
+      const canKeepPair = oldValue && newValue && oldValue !== newValue
+        && resumeVersions.some(version => version.id === oldValue)
+        && resumeVersions.some(version => version.id === newValue);
+      olderSelect.value = canKeepPair ? oldValue : resumeVersions[resumeVersions.length - 1].id;
+      newerSelect.value = canKeepPair ? newValue : resumeVersions[0].id;
+      const older = resumeVersions.find(version => version.id === olderSelect.value);
+      const newer = resumeVersions.find(version => version.id === newerSelect.value);
+      if (older.id === newer.id) {
+        currentDiff = [];
+        heading.textContent = 'Choose two different copies.';
+        diffList.innerHTML = '<div class="diff-empty">Pick different versions in the menus above.</div>';
+        document.getElementById('exportDiffButton').disabled = true;
+        return;
+      }
+      currentDiff = compareLines(older.text, newer.text);
+      heading.textContent = `Changes from “${older.title}” to “${newer.title}”`;
+      diffList.innerHTML = currentDiff.length
+        ? currentDiff.map(change => `<span class="diff-line diff-${change.type}">${change.type === 'added' ? '+' : '−'} ${escapeHtml(change.text)}</span>`).join('')
+        : '<div class="diff-empty">No line changes between these copies.</div>';
+      document.getElementById('exportDiffButton').disabled = !currentDiff.length;
+    }
+    function safeFileName(name) {
+      return (name || 'ProofBank-export').replace(/[<>:"/\\|?*\x00-\x1f]/g,'-').trim().replace(/\s+/g,'-').slice(0,80) || 'ProofBank-export';
+    }
+    function downloadBlob(filename, blob) {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url; link.download = safeFileName(filename); document.body.append(link); link.click(); link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+    function downloadTextFile(filename, content) {
+      downloadBlob(filename, new Blob([content], {type:'text/plain;charset=utf-8'}));
+    }
+    function deleteResumeVersion(id) {
+      const version = resumeVersions.find(item => item.id === id);
+      if (!version || !window.confirm(`Delete the saved resume copy “${version.title}”?`)) return;
+      resumeVersions = resumeVersions.filter(item => item.id !== id);
+      saveResumeVersions();
+      renderResumeVersions();
+      renderSuggestions();
+      showToast('Resume copy deleted.');
+    }
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+    function loadLocalAccounts() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(ACCOUNT_STORE_KEY) || '{}');
+        return saved && typeof saved === 'object' && !Array.isArray(saved) ? saved : {};
+      } catch (error) { return {}; }
+    }
+    function saveLocalAccounts(accounts) {
+      try { localStorage.setItem(ACCOUNT_STORE_KEY, JSON.stringify(accounts)); return true; }
+      catch (error) { return false; }
+    }
+    function bytesToHex(bytes) { return [...bytes].map(byte => byte.toString(16).padStart(2, '0')).join(''); }
+    async function makePasswordHash(password, saltHex) {
+      if (!window.crypto?.subtle) throw new Error('Password setup needs a secure website connection. Open the deployed https site and try again.');
+      const salt = new Uint8Array(saltHex.match(/.{2}/g).map(pair => parseInt(pair, 16)));
+      const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']);
+      const bits = await crypto.subtle.deriveBits({name:'PBKDF2', salt, iterations:120000, hash:'SHA-256'}, key, 256);
+      return bytesToHex(new Uint8Array(bits));
+    }
+    function setAuthMode(mode) {
+      authMode = mode;
+      const creating = mode === 'create';
+      document.getElementById('authTitle').textContent = creating ? 'Make a little room for your story.' : 'Welcome back.';
+      document.getElementById('authIntro').textContent = creating
+        ? 'Create a username and password to keep your notes and resume copies together.'
+        : 'Sign in to pick up where you left off.';
+      document.getElementById('authSubmit').textContent = creating ? 'Create my account' : 'Sign in';
+      document.getElementById('authModeToggle').textContent = creating ? 'Already have an account? Sign in' : 'New to ProofBank? Create an account';
+      document.getElementById('confirmPasswordWrap').hidden = !creating;
+      document.getElementById('authConfirmPassword').required = creating;
+      document.getElementById('authPassword').autocomplete = creating ? 'new-password' : 'current-password';
+      document.getElementById('authConfirmPassword').autocomplete = 'new-password';
+      document.getElementById('authFeedback').textContent = '';
+    }
+    function showAuthScreen(mode = 'create') {
+      clearTimeout(welcomeTimer);
+      document.body.classList.add('auth-open');
+      document.getElementById('welcomeScreen').hidden = true;
+      document.getElementById('authScreen').hidden = false;
+      document.getElementById('authForm').reset();
+      setAuthMode(mode);
+      document.getElementById('authUsername').focus();
+    }
+    function migrateLegacyDataForFirstAccount(userId, isFirstAccount) {
+      if (!isFirstAccount) return;
+      const newEvidenceKey = `proofbank-user-${encodeURIComponent(userId)}-evidence-v1`;
+      const newResumeKey = `proofbank-user-${encodeURIComponent(userId)}-resume-v1`;
+      try {
+        const oldEvidence = localStorage.getItem(LEGACY_STORE_KEY);
+        const oldResumes = localStorage.getItem(LEGACY_RESUME_STORE_KEY);
+        if (oldEvidence && !localStorage.getItem(newEvidenceKey)) localStorage.setItem(newEvidenceKey, oldEvidence);
+        if (oldResumes && !localStorage.getItem(newResumeKey)) localStorage.setItem(newResumeKey, oldResumes);
+      } catch (error) { /* A new profile can still start without older browser data. */ }
+    }
+    function clearComposerForProfile() {
+      document.getElementById('searchInput').value = '';
+      activeSkillFilter = '';
+      document.getElementById('ideaNotes').value = '';
+      document.getElementById('customPrompt').value = '';
+      document.getElementById('promptType').value = 'excellence';
+      document.getElementById('customPromptWrap').hidden = true;
+      document.getElementById('charLimit').value = '2500';
+      document.getElementById('draftText').value = '';
+      document.getElementById('resumeVersionName').value = '';
+      document.getElementById('resumeTextInput').value = '';
+      document.getElementById('resumeFileInput').value = '';
+      clearFeedback();
+      document.getElementById('proofLinks').innerHTML = '';
+    }
+    function enterWorkspace(profile, {showWelcome = true} = {}) {
+      activeProfile = profile;
+      const demo = Boolean(profile.demo);
+      useSampleEntries = demo;
+      STORE_KEY = demo ? 'proofbank-demo-evidence-v1' : `proofbank-user-${encodeURIComponent(profile.id)}-evidence-v1`;
+      RESUME_STORE_KEY = demo ? 'proofbank-demo-resume-v1' : `proofbank-user-${encodeURIComponent(profile.id)}-resume-v1`;
+      entries = loadEntries();
+      selectedIds = new Set(demo ? ['sample-robot', 'sample-team'] : []);
+      resumeVersions = loadResumeVersions();
+      clearComposerForProfile();
+      renderEntries();
+      renderResumeVersions();
+      renderSuggestions();
+      buildDraft();
+      updateCounter();
+      document.getElementById('accountLabel').textContent = demo ? 'Demo mode' : `@${profile.username}`;
+      document.getElementById('signOutButton').textContent = demo ? 'Exit demo' : 'Sign out';
+      document.getElementById('authScreen').hidden = true;
+      if (showWelcome) {
+        document.body.classList.add('auth-open');
+        document.getElementById('welcomeName').textContent = demo ? 'TESTING' : profile.username.toUpperCase();
+        document.getElementById('welcomeTitle').textContent = demo ? 'Welcome back to testing.' : `Welcome${profile.returning ? ' back' : ''}, ${profile.username}.`;
+        document.querySelector('.welcome-copy').textContent = demo
+          ? 'Loading the demo journal and resume shelf…'
+          : profile.returning
+            ? 'Let’s pick up where you left off. Your resume shelf is just below.'
+            : 'Your space is ready. We’ll start with your resume shelf.';
+        document.getElementById('welcomeScreen').hidden = false;
+        welcomeTimer = setTimeout(() => {
+          document.getElementById('welcomeScreen').hidden = true;
+          document.body.classList.remove('auth-open');
+          document.querySelector('.resume-section').scrollIntoView({behavior:'smooth', block:'start'});
+        }, 1900);
+      } else {
+        document.getElementById('welcomeScreen').hidden = true;
+        document.body.classList.remove('auth-open');
+        window.scrollTo(0, 0);
+      }
+    }
+    async function submitAuth(event) {
+      event.preventDefault();
+      const username = document.getElementById('authUsername').value.trim();
+      const userId = username.toLowerCase();
+      const password = document.getElementById('authPassword').value;
+      const feedback = document.getElementById('authFeedback');
+      const submit = document.getElementById('authSubmit');
+      feedback.textContent = '';
+      if (!/^[a-zA-Z0-9._-]{3,24}$/.test(username)) {
+        feedback.textContent = 'Use 3–24 letters, numbers, dots, dashes, or underscores for your username.';
+        return;
+      }
+      if (password.length < 8) {
+        feedback.textContent = 'Choose a password with at least 8 characters.';
+        return;
+      }
+      submit.disabled = true;
+      try {
+        const accounts = loadLocalAccounts();
+        if (authMode === 'create') {
+          if (password !== document.getElementById('authConfirmPassword').value) {
+            feedback.textContent = 'Those passwords do not match yet.';
+            return;
+          }
+          if (accounts[userId]) {
+            feedback.textContent = 'That username is already in use on this browser. Try signing in.';
+            return;
+          }
+          const salt = bytesToHex(crypto.getRandomValues(new Uint8Array(16)));
+          const passwordHash = await makePasswordHash(password, salt);
+          const isFirstAccount = Object.keys(accounts).length === 0;
+          accounts[userId] = {username, salt, passwordHash};
+          if (!saveLocalAccounts(accounts)) {
+            feedback.textContent = 'This browser could not save an account. Check its storage settings and try again.';
+            return;
+          }
+          migrateLegacyDataForFirstAccount(userId, isFirstAccount);
+          localStorage.setItem(ACTIVE_USER_KEY, userId);
+          enterWorkspace({id:userId, username, returning:false}, {showWelcome:true});
+        } else {
+          const account = accounts[userId];
+          if (!account || await makePasswordHash(password, account.salt) !== account.passwordHash) {
+            feedback.textContent = 'That username and password did not match.';
+            return;
+          }
+          localStorage.setItem(ACTIVE_USER_KEY, userId);
+          enterWorkspace({id:userId, username:account.username, returning:true}, {showWelcome:true});
+        }
+      } catch (error) {
+        feedback.textContent = error instanceof Error ? error.message : 'Could not open this account. Please try again.';
+      } finally {
+        submit.disabled = false;
+      }
+    }
+    function restoreActiveProfile() {
+      let savedId = '';
+      try { savedId = localStorage.getItem(ACTIVE_USER_KEY) || ''; } catch (error) { /* Continue to the account screen. */ }
+      if (savedId === '__demo__') {
+        enterWorkspace({id:'demo', username:'Demo', demo:true}, {showWelcome:false});
+        return;
+      }
+      if (savedId) {
+        const account = loadLocalAccounts()[savedId];
+        if (account) {
+          enterWorkspace({id:savedId, username:account.username, returning:true}, {showWelcome:false});
+          return;
+        }
+      }
+      showAuthScreen('create');
+    }
+    document.getElementById('authForm').addEventListener('submit', submitAuth);
+    document.getElementById('authModeToggle').addEventListener('click', () => setAuthMode(authMode === 'create' ? 'login' : 'create'));
+    document.getElementById('demoButton').addEventListener('click', () => {
+      try { localStorage.removeItem(ACTIVE_USER_KEY); } catch (error) { /* The demo still works for this visit. */ }
+      enterWorkspace({id:'demo', username:'Demo', demo:true}, {showWelcome:true});
+    });
+    document.getElementById('signOutButton').addEventListener('click', () => {
+      const wasDemo = Boolean(activeProfile?.demo);
+      try { localStorage.removeItem(ACTIVE_USER_KEY); } catch (error) { /* The account screen can still open. */ }
+      activeProfile = null;
+      showAuthScreen(wasDemo ? 'create' : 'login');
+    });
+    function syncSkillPicks() {
+      const skills = new Set(document.getElementById('expSkills').value.split(',').map(skill => skill.trim().toLowerCase()).filter(Boolean));
+      document.querySelectorAll('.skill-pick').forEach(button => {
+        button.setAttribute('aria-pressed', String(skills.has(button.dataset.skill.toLowerCase())));
+      });
+    }
+    function toggleSkillPick(button) {
+      const input = document.getElementById('expSkills');
+      const target = button.dataset.skill.toLowerCase();
+      const skills = input.value.split(',').map(skill => skill.trim()).filter(Boolean);
+      const exists = skills.some(skill => skill.toLowerCase() === target);
+      input.value = (exists ? skills.filter(skill => skill.toLowerCase() !== target) : [...skills, button.dataset.skill]).join(', ');
+      syncSkillPicks();
+      input.focus();
+    }
+    document.querySelectorAll('.skill-pick').forEach(button => button.addEventListener('click', () => toggleSkillPick(button)));
+    document.getElementById('expSkills').addEventListener('input', syncSkillPicks);
+    function openDialog() { syncSkillPicks(); document.getElementById('experienceDialog').showModal(); document.getElementById('expTitle').focus(); }
+    function closeDialog() { document.getElementById('experienceDialog').close(); }
+
+    document.getElementById('addButton').addEventListener('click', openDialog);
+    document.getElementById('topAdd').addEventListener('click', openDialog);
+    document.getElementById('closeDialog').addEventListener('click', closeDialog);
+    document.getElementById('cancelDialog').addEventListener('click', closeDialog);
+    document.getElementById('searchInput').addEventListener('input', renderEntries);
+    document.getElementById('promptType').addEventListener('change', event => {
+      document.getElementById('customPromptWrap').hidden = event.target.value !== 'custom';
+      renderSuggestions();
+    });
+    document.getElementById('buildButton').addEventListener('click', buildDraft);
+    document.getElementById('clearSelection').addEventListener('click', () => { selectedIds.clear(); renderEntries(); });
+    document.getElementById('charLimit').addEventListener('input', updateCounter);
+    document.getElementById('draftText').addEventListener('input', updateCounter);
+    document.getElementById('copyButton').addEventListener('click', async () => {
+      const text = document.getElementById('draftText').value;
+      if (!text) { showToast('Write or outline an answer first.'); return; }
+      try { await navigator.clipboard.writeText(text); showToast('Outline copied.'); }
+      catch (error) { document.getElementById('draftText').select(); showToast('Select the outline and copy it.'); }
+    });
+    document.getElementById('exportButton').addEventListener('click', () => {
+      downloadBlob('proofbank-journal-backup.json', new Blob([JSON.stringify({product:'ProofBank', version:1, experiences:entries}, null, 2)], {type:'application/json'}));
+      showToast('Journal backup downloaded.');
+    });
+    document.getElementById('experienceForm').addEventListener('submit', event => {
+      event.preventDefault();
+      const skills = document.getElementById('expSkills').value.split(',').map(item => item.trim()).filter(Boolean).slice(0,5);
+      const entry = {
+        id: `entry-${Date.now()}`, sample:false,
+        title:document.getElementById('expTitle').value.trim(),
+        type:document.getElementById('expType').value.trim() || 'Experience',
+        role:document.getElementById('expRole').value.trim() || 'Contributor',
+        action:document.getElementById('expAction').value.trim(),
+        result:document.getElementById('expResult').value.trim(),
+        careerClue:document.getElementById('expCareerClue').value.trim(),
+        skills,
+        promptTags:['excellence','problem','teamwork','leadership']
+      };
+      entries.unshift(entry); selectedIds.add(entry.id); saveEntries(); renderEntries(); closeDialog(); event.target.reset();
+      showToast('Journal note saved on this device.');
+    });
+    document.getElementById('experienceDialog').addEventListener('click', event => {
+      if (event.target === event.currentTarget) closeDialog();
+    });
+    document.getElementById('saveResumeButton').addEventListener('click', () => {
+      const text = document.getElementById('resumeTextInput').value.trim();
+      const name = document.getElementById('resumeVersionName').value.trim();
+      if (!text) { showToast('Paste a resume before saving this copy.'); return; }
+      addResumeVersion(name, text);
+      document.getElementById('resumeTextInput').value = '';
+      document.getElementById('resumeVersionName').value = '';
+    });
+    document.getElementById('resumeFileInput').addEventListener('change', async event => {
+      const files = [...event.target.files];
+      const imported = [];
+      for (const file of files) {
+        const text = await file.text();
+        if (!text.trim()) continue;
+        imported.push({id:`resume-${Date.now()}-${Math.random().toString(36).slice(2,7)}`, title:file.name.replace(/\.(txt|md)$/i,'') || `Resume copy ${resumeVersions.length + imported.length + 1}`, createdAt:new Date().toISOString(), text:text.trim()});
+      }
+      if (imported.length) {
+        resumeVersions = [...imported, ...resumeVersions];
+        saveResumeVersions();
+        renderResumeVersions();
+        renderSuggestions();
+        document.getElementById('resumeSourceVersion').value = imported[0].id;
+        if (resumeVersions.length > 1) {
+          document.getElementById('olderVersion').value = resumeVersions[1].id;
+          document.getElementById('newerVersion').value = resumeVersions[0].id;
+          updateComparison();
+        }
+        showToast(`${imported.length} resume cop${imported.length === 1 ? 'y' : 'ies'} saved on this device.`);
+      } else if (files.length) showToast('Those files were empty. Choose text or Markdown files.');
+      event.target.value = '';
+    });
+    document.getElementById('olderVersion').addEventListener('change', updateComparison);
+    document.getElementById('newerVersion').addEventListener('change', updateComparison);
+    document.getElementById('resumeSourceVersion').addEventListener('change', () => renderSuggestions());
+    document.getElementById('exportAllResumes').addEventListener('click', () => {
+      if (!resumeVersions.length) { showToast('Save at least one resume copy first.'); return; }
+      downloadBlob('proofbank-resume-versions.json', new Blob([JSON.stringify({product:'ProofBank', type:'resume-versions', versions:resumeVersions}, null, 2)], {type:'application/json'}));
+      showToast('All saved resume copies exported.');
+    });
+    document.getElementById('exportDiffButton').addEventListener('click', () => {
+      if (!currentDiff.length) return;
+      const older = resumeVersions.find(version => version.id === document.getElementById('olderVersion').value);
+      const newer = resumeVersions.find(version => version.id === document.getElementById('newerVersion').value);
+      if (!older || !newer) return;
+      const text = `CHANGES FROM: ${older.title}\nCHANGES TO: ${newer.title}\n\n${currentDiff.map(change => `${change.type === 'added' ? '+ ' : '- '}${change.text}`).join('\n')}\n`;
+      downloadTextFile(`${safeFileName(older.title)}-to-${safeFileName(newer.title)}-changes.txt`, text);
+      showToast('Only the changed lines were exported.');
+    });
+    restoreActiveProfile();
+  </script>
+</body>
+</html>
