@@ -241,6 +241,39 @@
     .resume-row-actions { display:flex; gap:9px; align-items:center; }
     .resume-row-actions button { border:0; background:transparent; padding:2px 0; color:#755044; text-decoration:underline; text-underline-offset:3px; font:10px "Comfortaa",sans-serif; }
     .resume-row-actions button:hover { color:#a33c2b; }
+    .resume-update { margin:4px 20px 18px; padding:16px; border:1px solid #c5d2d8; border-radius:12px; background:#f4f7f7; }
+    .update-heading { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:13px; }
+    .update-heading h3 { margin:0; color:#33434a; font:600 17px "Comfortaa",sans-serif; }
+    .update-heading p { margin:6px 0 0; color:#64737a; font:11px/1.55 "Comfortaa",sans-serif; max-width:670px; }
+    .update-grid { display:grid; grid-template-columns:minmax(0,1.25fr) minmax(230px,.75fr); gap:14px; align-items:start; }
+    .update-fields,.update-progress,.update-preview { border:1px solid #d2dde1; border-radius:10px; background:#fbfcfc; padding:13px; }
+    .update-fields { display:grid; gap:10px; }
+    .update-fields label { display:block; color:#4d6570; font:700 10px "Comfortaa",sans-serif; letter-spacing:.025em; }
+    .update-fields input,.update-fields select,.update-fields textarea { display:block; width:100%; margin-top:5px; border:1px solid #c5d2d8; border-radius:8px; padding:9px 10px; background:#fff; color:#302a24; font:12px/1.45 "Comfortaa",sans-serif; }
+    .update-fields textarea { min-height:83px; resize:vertical; }
+    .update-dates { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .present-check { display:flex !important; align-items:center; gap:7px; margin-top:8px; color:#64737a !important; font-weight:500 !important; }
+    .present-check input { width:auto; margin:0; accent-color:#4d6570; }
+    .update-progress h4,.update-preview h4 { margin:0; color:#33434a; font:600 13px "Comfortaa",sans-serif; }
+    .update-progress-count { display:flex; justify-content:space-between; align-items:baseline; margin-top:12px; color:#4d6570; font:11px "Comfortaa",sans-serif; }
+    .update-progress-count strong { font-size:17px; }
+    .update-progress-track { height:7px; overflow:hidden; margin:7px 0 11px; border-radius:99px; background:#e2e9eb; }
+    .update-progress-track span { display:block; width:0; height:100%; border-radius:inherit; background:#718a96; transition:width .2s ease; }
+    .update-checklist { display:grid; gap:7px; margin:0; padding:0; list-style:none; }
+    .update-checklist li { display:flex; gap:8px; align-items:flex-start; color:#6b7476; font:10px/1.45 "Comfortaa",sans-serif; }
+    .update-checklist li::before { content:'○'; flex:0 0 14px; color:#93a2a8; font-size:12px; line-height:1.1; }
+    .update-checklist li.done { color:#4e5b44; }
+    .update-checklist li.done::before { content:'✓'; color:#4e5b44; font-weight:700; }
+    .update-gap-note { min-height:32px; margin:11px 0 0; padding-top:9px; border-top:1px solid #e2e9eb; color:#64737a; font:10px/1.5 "Comfortaa",sans-serif; }
+    .update-optional { color:#849197; }
+    .update-preview { margin-top:13px; }
+    .update-preview-top { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    .update-preview textarea { width:100%; min-height:190px; margin-top:9px; border:1px solid #c5d2d8; border-radius:8px; padding:12px; background:#fff; color:#302a24; font:12px/1.6 "Comfortaa",sans-serif; resize:vertical; }
+    .update-actions { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .update-actions-group { display:flex; gap:8px; flex-wrap:wrap; }
+    .update-save-state { color:#718087; font:10px "Comfortaa",sans-serif; }
+    @media (max-width:900px) { .update-grid { grid-template-columns:1fr; } }
+    @media (max-width:620px) { .resume-update { margin-left:14px; margin-right:14px; padding:11px; } .update-heading { display:block; } .update-dates { grid-template-columns:1fr 1fr; } .update-actions { align-items:flex-start; flex-direction:column; } }
     dialog { border:1px solid #d6c7b5; border-radius:3px; background:#fffdf8; box-shadow:0 16px 45px rgba(48,36,25,.22); }
     dialog::backdrop { background:rgba(42,34,27,.42); backdrop-filter:blur(1px); }
     .modal-head { border-color:#e4dacd; }
@@ -607,6 +640,71 @@
           </div>
         </div>
       </div>
+      <section class="resume-update" aria-labelledby="resumeUpdateTitle">
+        <div class="update-heading">
+          <div>
+            <h3 id="resumeUpdateTitle">Add an experience to your resume</h3>
+            <p>Start with a saved resume, then add a program or role and the details you remember. Your words stay yours; this page organizes them into a draft you can edit.</p>
+          </div>
+          <span class="update-save-state" id="updateDraftSaved" aria-live="polite">Draft saves as you go</span>
+        </div>
+        <div class="update-grid">
+          <div class="update-fields">
+            <label for="updateBaseVersion">Previous resume
+              <select id="updateBaseVersion"><option value="">Save or import a resume copy first</option></select>
+            </label>
+            <label for="updateExperienceTitle">Program, job, project, or experience
+              <input id="updateExperienceTitle" maxlength="90" placeholder="e.g. Summer research program">
+            </label>
+            <label for="updateOrganization">Organization or school <span class="update-optional">· optional</span>
+              <input id="updateOrganization" maxlength="90" placeholder="e.g. SUNY Poly research lab">
+            </label>
+            <div>
+              <div class="update-dates">
+                <label for="updateStartDate">From
+                  <input id="updateStartDate" type="month">
+                </label>
+                <label for="updateEndDate">To
+                  <input id="updateEndDate" type="month">
+                </label>
+              </div>
+              <label class="present-check"><input id="updateCurrent" type="checkbox"> I’m still doing this</label>
+            </div>
+            <label for="updateKeyIdeas">What you did or want to highlight
+              <textarea id="updateKeyIdeas" maxlength="1400" placeholder="Add one idea per line. Include tools, tasks, or choices you made."></textarea>
+            </label>
+            <label for="updateTakeaways">What changed or what you learned <span class="update-optional">· optional</span>
+              <textarea id="updateTakeaways" maxlength="700" placeholder="A result, lesson, or detail you want to remember."></textarea>
+            </label>
+          </div>
+          <aside class="update-progress" aria-labelledby="updateProgressTitle">
+            <h4 id="updateProgressTitle">Your update progress</h4>
+            <div class="update-progress-count"><span id="updateProgressLabel">0 of 5 essentials</span><strong id="updateProgressPercent">0%</strong></div>
+            <div class="update-progress-track" role="progressbar" aria-label="Resume update progress" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0" id="updateProgressBar"><span id="updateProgressFill"></span></div>
+            <ul class="update-checklist" id="updateChecklist">
+              <li data-update-check="base">Choose a previous resume</li>
+              <li data-update-check="title">Name the experience</li>
+              <li data-update-check="dates">Add the date range</li>
+              <li data-update-check="ideas">Add what you did or key ideas</li>
+              <li data-update-check="organization" class="update-optional">Organization (optional)</li>
+              <li data-update-check="takeaways" class="update-optional">Takeaway or result (optional)</li>
+            </ul>
+            <p class="update-gap-note" id="updateGapNote" aria-live="polite">Your unfinished details will show here as you fill them in.</p>
+          </aside>
+        </div>
+        <div class="update-preview">
+          <div class="update-preview-top"><h4>Updated resume copy</h4><span class="update-save-state">Review and edit before saving</span></div>
+          <textarea id="resumeUpdatePreview" aria-label="Editable updated resume preview" placeholder="Your previous resume and the new experience will appear here."></textarea>
+          <div class="update-actions">
+            <span class="update-save-state" id="updatePreviewStatus">The added details are organized from your notes.</span>
+            <div class="update-actions-group">
+              <button type="button" class="button button-light button-small" id="startAnotherUpdate">Start another update</button>
+              <button type="button" class="button button-primary button-small" id="buildResumeUpdate" disabled>Build updated copy</button>
+              <button type="button" class="button button-dark button-small" id="saveResumeUpdate" disabled>Save as new version</button>
+            </div>
+          </div>
+        </div>
+      </section>
       <div class="resume-shelf-head">Saved copies <span id="resumeCount">0 versions</span></div>
       <div class="resume-list" id="resumeList"><div class="empty-state">No resume copies yet. Paste a version above to start your shelf.</div></div>
     </section>
@@ -960,6 +1058,147 @@
       select.innerHTML = resumeVersions.map(version => `<option value="${escapeHtml(version.id)}">${escapeHtml(version.title)} · ${escapeHtml(new Date(version.createdAt).toLocaleDateString())}</option>`).join('');
       select.value = resumeVersions.some(version => version.id === previousValue) ? previousValue : resumeVersions[0].id;
     }
+    function renderUpdateBaseSelector() {
+      const select = document.getElementById('updateBaseVersion');
+      const previousValue = select.value;
+      if (!resumeVersions.length) {
+        select.innerHTML = '<option value="">Save or import a resume copy first</option>';
+        select.disabled = true;
+        return;
+      }
+      select.disabled = false;
+      select.innerHTML = resumeVersions.map(version => `<option value="${escapeHtml(version.id)}">${escapeHtml(version.title)} · ${escapeHtml(new Date(version.createdAt).toLocaleDateString())}</option>`).join('');
+      select.value = resumeVersions.some(version => version.id === previousValue) ? previousValue : resumeVersions[0].id;
+    }
+    function resumeUpdateDraftKey() { return `${RESUME_STORE_KEY}-update-draft-v1`; }
+    function readResumeUpdateFields() {
+      return {
+        baseId:document.getElementById('updateBaseVersion').value,
+        title:document.getElementById('updateExperienceTitle').value,
+        organization:document.getElementById('updateOrganization').value,
+        startDate:document.getElementById('updateStartDate').value,
+        endDate:document.getElementById('updateEndDate').value,
+        current:document.getElementById('updateCurrent').checked,
+        ideas:document.getElementById('updateKeyIdeas').value,
+        takeaways:document.getElementById('updateTakeaways').value,
+        preview:document.getElementById('resumeUpdatePreview').value
+      };
+    }
+    function saveResumeUpdateDraft() {
+      try {
+        localStorage.setItem(resumeUpdateDraftKey(), JSON.stringify(readResumeUpdateFields()));
+        document.getElementById('updateDraftSaved').textContent = 'Draft saved on this device';
+      } catch (error) {
+        document.getElementById('updateDraftSaved').textContent = 'Draft could not be saved';
+      }
+    }
+    function restoreResumeUpdateDraft() {
+      const defaults = {baseId:resumeVersions[0]?.id || '', title:'', organization:'', startDate:'', endDate:'', current:false, ideas:'', takeaways:'', preview:''};
+      let saved = {};
+      try { saved = JSON.parse(localStorage.getItem(resumeUpdateDraftKey()) || '{}') || {}; } catch (error) { saved = {}; }
+      const draft = {...defaults, ...saved};
+      const fields = {
+        updateBaseVersion:draft.baseId,
+        updateExperienceTitle:draft.title,
+        updateOrganization:draft.organization,
+        updateStartDate:draft.startDate,
+        updateEndDate:draft.endDate,
+        updateKeyIdeas:draft.ideas,
+        updateTakeaways:draft.takeaways,
+        resumeUpdatePreview:draft.preview
+      };
+      Object.entries(fields).forEach(([id, value]) => { document.getElementById(id).value = value || ''; });
+      document.getElementById('updateCurrent').checked = Boolean(draft.current);
+      document.getElementById('updateEndDate').disabled = Boolean(draft.current);
+      document.getElementById('saveResumeUpdate').disabled = !String(draft.preview || '').trim();
+      document.getElementById('updateDraftSaved').textContent = draft.preview || draft.title || draft.ideas ? 'Draft restored from this device' : 'Draft saves as you go';
+      renderResumeUpdateProgress();
+    }
+    function renderResumeUpdateProgress() {
+      const fields = readResumeUpdateFields();
+      const checks = {
+        base:Boolean(resumeVersions.some(version => version.id === fields.baseId)),
+        title:Boolean(fields.title.trim()),
+        dates:Boolean(fields.startDate && (fields.current || fields.endDate)),
+        ideas:Boolean(fields.ideas.trim()),
+        organization:Boolean(fields.organization.trim()),
+        takeaways:Boolean(fields.takeaways.trim())
+      };
+      document.querySelectorAll('[data-update-check]').forEach(item => item.classList.toggle('done', checks[item.dataset.updateCheck]));
+      const complete = ['base','title','dates','ideas'].filter(key => checks[key]).length;
+      const percent = Math.round(complete / 4 * 100);
+      document.getElementById('updateProgressLabel').textContent = `${complete} of 4 essentials`;
+      document.getElementById('updateProgressPercent').textContent = `${percent}%`;
+      document.getElementById('updateProgressFill').style.width = `${percent}%`;
+      document.getElementById('updateProgressBar').setAttribute('aria-valuemax', '4');
+      document.getElementById('updateProgressBar').setAttribute('aria-valuenow', String(complete));
+      const missing = [];
+      if (!checks.base) missing.push('a previous resume');
+      if (!checks.title) missing.push('the experience name');
+      if (!fields.startDate) missing.push('a start date');
+      if (!fields.current && !fields.endDate) missing.push('an end date');
+      if (!checks.ideas) missing.push('your key ideas or actions');
+      const note = document.getElementById('updateGapNote');
+      note.textContent = missing.length ? `Still to add: ${missing.join(', ')}.` : 'All essentials are in. Add an organization or takeaway if useful, then build your copy.';
+      document.getElementById('buildResumeUpdate').disabled = complete !== 4;
+    }
+    function formatResumeMonth(value) {
+      if (!value) return '';
+      const [year, month] = value.split('-').map(Number);
+      return new Intl.DateTimeFormat(undefined, {month:'short', year:'numeric', timeZone:'UTC'}).format(new Date(Date.UTC(year, month - 1, 1)));
+    }
+    function resumeBulletLines(text) {
+      return String(text || '').split(/\r?\n/).map(line => line.trim()).filter(Boolean).map(line => /^[-•*]\s*/.test(line) ? line : `• ${line}`);
+    }
+    function buildUpdatedResume() {
+      const fields = readResumeUpdateFields();
+      const base = resumeVersions.find(version => version.id === fields.baseId);
+      if (!base || !fields.title.trim() || !fields.startDate || (!fields.current && !fields.endDate) || !fields.ideas.trim()) {
+        renderResumeUpdateProgress();
+        showToast('Fill the four essentials before building your copy.');
+        return;
+      }
+      const dates = `${formatResumeMonth(fields.startDate)} – ${fields.current ? 'Present' : formatResumeMonth(fields.endDate)}`;
+      const heading = `${fields.title.trim()}${fields.organization.trim() ? ` | ${fields.organization.trim()}` : ''} | ${dates}`;
+      const bullets = [...resumeBulletLines(fields.ideas), ...resumeBulletLines(fields.takeaways)];
+      const addition = `${heading}\n${bullets.join('\n')}`;
+      const updated = `${base.text.trim()}\n\n${addition}`.trim();
+      document.getElementById('resumeUpdatePreview').value = updated;
+      document.getElementById('saveResumeUpdate').disabled = false;
+      document.getElementById('updatePreviewStatus').textContent = `Added to “${base.title}” · edit this copy before saving`;
+      saveResumeUpdateDraft();
+      showToast('Your updated copy is ready to review.');
+    }
+    function invalidateResumeUpdatePreview() {
+      const preview = document.getElementById('resumeUpdatePreview');
+      if (!preview.value.trim()) return;
+      preview.value = '';
+      document.getElementById('saveResumeUpdate').disabled = true;
+      document.getElementById('updatePreviewStatus').textContent = 'Details changed. Build again to refresh the copy.';
+    }
+    function saveUpdatedResume() {
+      const fields = readResumeUpdateFields();
+      const base = resumeVersions.find(version => version.id === fields.baseId);
+      const text = fields.preview.trim();
+      if (!base || !text) { showToast('Build an updated copy before saving it.'); return; }
+      const title = `${base.title} — ${fields.title.trim() || 'updated'}`.slice(0, 60);
+      addResumeVersion(title, text);
+      document.getElementById('updatePreviewStatus').textContent = `Saved “${title}” as a new resume version.`;
+      document.getElementById('updateDraftSaved').textContent = 'Update saved; progress kept';
+      saveResumeUpdateDraft();
+    }
+    function startAnotherResumeUpdate() {
+      const base = resumeVersions[0]?.id || '';
+      document.getElementById('updateBaseVersion').value = base;
+      ['updateExperienceTitle','updateOrganization','updateStartDate','updateEndDate','updateKeyIdeas','updateTakeaways','resumeUpdatePreview'].forEach(id => { document.getElementById(id).value = ''; });
+      document.getElementById('updateCurrent').checked = false;
+      document.getElementById('updateEndDate').disabled = false;
+      document.getElementById('saveResumeUpdate').disabled = true;
+      document.getElementById('updatePreviewStatus').textContent = 'The added details are organized from your notes.';
+      renderResumeUpdateProgress();
+      saveResumeUpdateDraft();
+      showToast('Ready for another update.');
+    }
     function renderResumeVersions() {
       const list = document.getElementById('resumeList');
       document.getElementById('resumeCount').textContent = `${resumeVersions.length} version${resumeVersions.length === 1 ? '' : 's'}`;
@@ -973,7 +1212,9 @@
         }).join('');
       }
       renderResumeSourceSelector();
+      renderUpdateBaseSelector();
       updateComparison();
+      renderResumeUpdateProgress();
       list.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => {
         const version = resumeVersions.find(item => item.id === button.dataset.id);
         if (button.dataset.action === 'download' && version) downloadTextFile(`${safeFileName(version.title)}.txt`, version.text);
@@ -1147,6 +1388,7 @@
       clearComposerForProfile();
       renderEntries();
       renderResumeVersions();
+      restoreResumeUpdateDraft();
       renderSuggestions();
       buildDraft();
       updateCounter();
@@ -1327,6 +1569,27 @@
       document.getElementById('resumeTextInput').value = '';
       document.getElementById('resumeVersionName').value = '';
     });
+    const resumeUpdateTextFields = ['updateExperienceTitle','updateOrganization','updateStartDate','updateEndDate','updateKeyIdeas','updateTakeaways','resumeUpdatePreview'];
+    resumeUpdateTextFields.forEach(id => {
+      const field = document.getElementById(id);
+      field.addEventListener('input', () => {
+        if (id === 'resumeUpdatePreview') document.getElementById('saveResumeUpdate').disabled = !field.value.trim();
+        else invalidateResumeUpdatePreview();
+        renderResumeUpdateProgress();
+        saveResumeUpdateDraft();
+      });
+      if (field.tagName === 'INPUT' && field.type === 'month') field.addEventListener('change', () => { renderResumeUpdateProgress(); saveResumeUpdateDraft(); });
+    });
+    document.getElementById('updateBaseVersion').addEventListener('change', () => { invalidateResumeUpdatePreview(); renderResumeUpdateProgress(); saveResumeUpdateDraft(); });
+    document.getElementById('updateCurrent').addEventListener('change', event => {
+      document.getElementById('updateEndDate').disabled = event.target.checked;
+      invalidateResumeUpdatePreview();
+      renderResumeUpdateProgress();
+      saveResumeUpdateDraft();
+    });
+    document.getElementById('buildResumeUpdate').addEventListener('click', buildUpdatedResume);
+    document.getElementById('saveResumeUpdate').addEventListener('click', saveUpdatedResume);
+    document.getElementById('startAnotherUpdate').addEventListener('click', startAnotherResumeUpdate);
     document.getElementById('resumeFileInput').addEventListener('change', async event => {
       const files = [...event.target.files];
       const imported = [];
